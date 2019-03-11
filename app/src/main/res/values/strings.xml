@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">Yahtzee</string>
+    <string name="roll">Roll</string>
+    <string name="dice_3">Dice #3</string>
+    <string name="dice_2">Dice #2</string>
+    <string name="dice_1">Dice #1</string>
+    <string name="dice_4">Dice #4</string>
+    <string name="dice_5">Dice #5</string>
+    <string name="textview">TextView</string>
+    <string name="button1">Button</string>
+    <string name="button2">Button</string>
+    <string name="button3">Button</string>
+    <string name="button4">Button</string>
+    <string name="button5">Button</string>
+    <string name="button6">Button</string>
+    <string name="button7">Button</string>
+    <string name="button8">Button</string>
+    <string name="button9">Button</string>
+    <string name="button10">Button</string>
+    <string name="button11">Button</string>
+    <string name="button12">Button</string>
+    <string name="button13">Button</string>
+    <string name="roll_1">ROLL #1</string>
+    <string name="NO_MORE_ROLLS">NO MORE ROLLS</string>
+    <string name="next_turn">NEXT TURN</string>
+</resources>
