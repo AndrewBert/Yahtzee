@@ -253,29 +253,73 @@ class MainActivity : AppCompatActivity() {
                     sumOfAllDice+=6}
             }
         }
-        //checks and calculates 3x, 4x, and yahtzee
-        frequenciesOfNumbers.forEach{ number, frequency ->
+        //chance
+        playerScoreSheet[12].value = sumOfAllDice
 
+        //checks and calculates 3x, 4x, full house,  and yahtzee
+        frequenciesOfNumbers.forEach{ number, frequency ->
+            //three Of A Kind check
             if(frequency >= 3){
-                //three Of A Kind
                 playerScoreSheet[6].value = sumOfAllDice
-                if(frequenciesOfNumbers.size == 2 && frequency==3)
-                {
-                    //full house
+
+                //full house check
+                if(frequenciesOfNumbers.size == 2 && frequency==3) {
                     playerScoreSheet[8].value = 25
                 }
             }
 
+            //four Of A Kind check
             if(frequency >= 4){
-                //four Of A Kind
                 playerScoreSheet[7].value = sumOfAllDice
             }
 
-            if(frequency == 5)
-            {
-                //yahtzee
+            //yahtzee check
+            if(frequency == 5){
                 playerScoreSheet[11].value = 50
             }
+
+            //large straight check
+            if(frequenciesOfNumbers.size == 5)
+            {
+                //dice values
+                val listOfValues  = mutableListOf<Int>()
+
+                for(n in 0 until diceList.size) {
+
+                    listOfValues.add(diceList[n].value)
+                }
+                //sorted list of dice values
+                val sortedListOfValues = listOfValues.sorted()
+
+                if(sortedListOfValues == mutableListOf(1,2,3,4,5) || sortedListOfValues == mutableListOf(2,3,4,5,6)) {
+                    playerScoreSheet[9].value = 30
+                    playerScoreSheet[10].value = 40
+                }
+            }
+
+            //small straight check
+            if(frequenciesOfNumbers.size >= 4)
+            {
+                //dice values
+                val listOfValues  = mutableListOf<Int>()
+
+                for(n in 0 until diceList.size) {
+
+                    listOfValues.add(diceList[n].value)
+                }
+
+                //sorted list of distinct dice values
+                val sortedDistinctListOfValues = listOfValues.sorted().distinct()
+
+                //all possible small straight combos
+                if(sortedDistinctListOfValues == mutableListOf(1,2,3,4) || sortedDistinctListOfValues == mutableListOf(1,2,3,4,5) ||
+                    sortedDistinctListOfValues == mutableListOf(1,2,3,4,6) || sortedDistinctListOfValues == mutableListOf(2,3,4,5) ||
+                    sortedDistinctListOfValues == mutableListOf(1,3,4,5,6) || sortedDistinctListOfValues == mutableListOf(3,4,5,6)) {
+
+                    playerScoreSheet[9].value = 30
+                }
+            }
+
         }
 
 
@@ -317,6 +361,7 @@ class MainActivity : AppCompatActivity() {
         val upperScoreBox4 = ScoreBox(foursButton,0, isSelected = false,isSaved = false)
         val upperScoreBox5 = ScoreBox(fivesButton,0, isSelected = false, isSaved = false)
         val upperScoreBox6 = ScoreBox(sixesButton,0, isSelected = false, isSaved = false)
+        //initializing lower score boxes
         val lowerScoreBox1 = ScoreBox(threeOfAKindButton,0,isSelected = false,isSaved = false)
         val lowerScoreBox2 = ScoreBox(fourOfAKindButton,0,isSelected = false,isSaved = false)
         val lowerScoreBox3 = ScoreBox(fullHouseButton,0,isSelected = false,isSaved = false)
@@ -328,8 +373,8 @@ class MainActivity : AppCompatActivity() {
         //returns score-sheet to player
         return listOf(upperScoreBox1,upperScoreBox2,upperScoreBox3,
             upperScoreBox4,upperScoreBox5,upperScoreBox6, lowerScoreBox1,
-            lowerScoreBox2, lowerScoreBox3, lowerScoreBox4, lowerScoreBox4,
-            lowerScoreBox5, lowerScoreBox6, lowerScoreBox7)
+            lowerScoreBox2, lowerScoreBox3, lowerScoreBox4, lowerScoreBox5,
+            lowerScoreBox6, lowerScoreBox7)
     }
 
     private fun nextTurn(playerList: MutableList<Player>, thisPlayersTurn: Int,diceList: List<Dice>)
