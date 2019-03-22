@@ -5,6 +5,7 @@
  */
 package com.example.yahtzee
 
+import android.annotation.TargetApi
 import android.content.Context
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -15,9 +16,9 @@ import android.widget.TextView
 import android.widget.Toast
 
 
-class Player(val name: String, val playerScoreSheet: List<ScoreBox>, var upperTotalScore: Int)
-class Dice(val button: Button, var isSelected: Boolean, var value: Int)
-class ScoreBox(val button: Button, var value: Int, var isSelected: Boolean, var isSaved: Boolean)
+data class Player(val name: String, val playerScoreSheet: List<ScoreBox>, var upperTotalScore: Int)
+data class Dice(val button: Button, var isSelected: Boolean, var value: Int)
+data class ScoreBox(val button: Button, var value: Int, var isSelected: Boolean, var isSaved: Boolean)
 
 class MainActivity : AppCompatActivity() {
 
@@ -216,9 +217,12 @@ class MainActivity : AppCompatActivity() {
         calcScore(diceList,playersScoreSheet[thisPlayersTurn].playerScoreSheet)
 
     }
-    //searches through the
+    @TargetApi(24)
     private fun calcScore(diceList: List<Dice>, playerScoreSheet: List<ScoreBox>)
     {
+        val frequenciesOfNumbers = diceList.groupingBy { it.value }.eachCount()
+        var sumOfAllDice = 0
+
         //makes sure the values reset to 0 if they are not saved
         playerScoreSheet.forEach { n ->
             if(!n.isSaved) {
@@ -230,19 +234,54 @@ class MainActivity : AppCompatActivity() {
         {
             when(diceList[n].value){
                 1 -> if(!playerScoreSheet[0].isSaved)
-                {playerScoreSheet[0].value+=1}
+                {playerScoreSheet[0].value+=1
+                sumOfAllDice+=1}
                 2 -> if(!playerScoreSheet[1].isSaved)
-                {playerScoreSheet[1].value+=2}
+                {playerScoreSheet[1].value+=2
+                    sumOfAllDice+=2}
                 3 -> if(!playerScoreSheet[2].isSaved)
-                {playerScoreSheet[2].value+=3}
+                {playerScoreSheet[2].value+=3
+                    sumOfAllDice+=3}
                 4 -> if(!playerScoreSheet[3].isSaved)
-                {playerScoreSheet[3].value+=4}
+                {playerScoreSheet[3].value+=4
+                    sumOfAllDice+=4}
                 5 -> if(!playerScoreSheet[4].isSaved)
-                {playerScoreSheet[4].value+=5}
+                {playerScoreSheet[4].value+=5
+                    sumOfAllDice+=5}
                 6 -> if(!playerScoreSheet[5].isSaved)
-                {playerScoreSheet[5].value+=6}
+                {playerScoreSheet[5].value+=6
+                    sumOfAllDice+=6}
             }
         }
+        //checks and calculates 3x, 4x, and yahtzee
+        frequenciesOfNumbers.forEach{ number, frequency ->
+
+            if(frequency >= 3){
+                //three Of A Kind
+                playerScoreSheet[6].value = sumOfAllDice
+                if(frequenciesOfNumbers.size == 2 && frequency==3)
+                {
+                    //full house
+                    playerScoreSheet[8].value = 25
+                }
+            }
+
+            if(frequency >= 4){
+                //four Of A Kind
+                playerScoreSheet[7].value = sumOfAllDice
+            }
+
+            if(frequency == 5)
+            {
+                //yahtzee
+                playerScoreSheet[11].value = 50
+            }
+        }
+
+
+
+
+
         //displays the value on the upper score buttons
         for(n in 0 until playerScoreSheet.size) {
             //stops the number from updating if you have selected to save it, might be a bad implementation bc
@@ -263,15 +302,34 @@ class MainActivity : AppCompatActivity() {
         val foursButton = findViewById<Button>(R.id.foursButton)
         val fivesButton = findViewById<Button>(R.id.fivesButton)
         val sixesButton = findViewById<Button>(R.id.sixesButton)
-        //initializing upper score
-        val scoreBox1 = ScoreBox(onesButton,0,isSelected = false, isSaved = false)
-        val scoreBox2 = ScoreBox(twosButton,0, isSelected = false, isSaved = false)
-        val scoreBox3 = ScoreBox(threesButton,0, isSelected = false, isSaved = false)
-        val scoreBox4 = ScoreBox(foursButton,0, isSelected = false,isSaved = false)
-        val scoreBox5 = ScoreBox(fivesButton,0, isSelected = false, isSaved = false)
-        val scoreBox6 = ScoreBox(sixesButton,0, isSelected = false, isSaved = false)
+        val threeOfAKindButton = findViewById<Button>(R.id.threeOfAKindButton)
+        val fourOfAKindButton = findViewById<Button>(R.id.fourOfAKindButton)
+        val fullHouseButton = findViewById<Button>(R.id.fullHouseButton)
+        val smallStraightButton = findViewById<Button>(R.id.smallStraightButton)
+        val largeStraightButton = findViewById<Button>(R.id.largeStraightButton)
+        val yahtzeeButton = findViewById<Button>(R.id.yahtzeeButton)
+        val chanceButton = findViewById<Button>(R.id.chanceButton)
+
+        //initializing score boxes
+        val upperScoreBox1 = ScoreBox(onesButton,0,isSelected = false, isSaved = false)
+        val upperScoreBox2 = ScoreBox(twosButton,0, isSelected = false, isSaved = false)
+        val upperScoreBox3 = ScoreBox(threesButton,0, isSelected = false, isSaved = false)
+        val upperScoreBox4 = ScoreBox(foursButton,0, isSelected = false,isSaved = false)
+        val upperScoreBox5 = ScoreBox(fivesButton,0, isSelected = false, isSaved = false)
+        val upperScoreBox6 = ScoreBox(sixesButton,0, isSelected = false, isSaved = false)
+        val lowerScoreBox1 = ScoreBox(threeOfAKindButton,0,isSelected = false,isSaved = false)
+        val lowerScoreBox2 = ScoreBox(fourOfAKindButton,0,isSelected = false,isSaved = false)
+        val lowerScoreBox3 = ScoreBox(fullHouseButton,0,isSelected = false,isSaved = false)
+        val lowerScoreBox4 = ScoreBox(smallStraightButton,0,isSelected = false,isSaved = false)
+        val lowerScoreBox5 = ScoreBox(largeStraightButton,0,isSelected = false,isSaved = false)
+        val lowerScoreBox6 = ScoreBox(yahtzeeButton,0,isSelected = false,isSaved = false)
+        val lowerScoreBox7 = ScoreBox(chanceButton,0,isSelected = false,isSaved = false)
+
         //returns score-sheet to player
-        return listOf(scoreBox1,scoreBox2,scoreBox3,scoreBox4,scoreBox5,scoreBox6)
+        return listOf(upperScoreBox1,upperScoreBox2,upperScoreBox3,
+            upperScoreBox4,upperScoreBox5,upperScoreBox6, lowerScoreBox1,
+            lowerScoreBox2, lowerScoreBox3, lowerScoreBox4, lowerScoreBox4,
+            lowerScoreBox5, lowerScoreBox6, lowerScoreBox7)
     }
 
     private fun nextTurn(playerList: MutableList<Player>, thisPlayersTurn: Int,diceList: List<Dice>)
@@ -286,11 +344,13 @@ class MainActivity : AppCompatActivity() {
             else
                 n.button.setBackgroundColor(ContextCompat.getColor(this, R.color.colorWhite))
         }
+
         diceList.forEach { n->
             n.button.isClickable = false
             n.button.text = "0"
             n.button.setBackgroundColor(ContextCompat.getColor(this, R.color.colorWhite))
         }
+
         playerList[thisPlayersTurn].playerScoreSheet.forEach { n->
             //shows appropriate saved score-boxes
             if(n.isSaved) { n.button.text = n.value.toString()}
