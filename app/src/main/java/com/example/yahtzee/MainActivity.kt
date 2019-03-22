@@ -16,7 +16,8 @@ import android.widget.TextView
 import android.widget.Toast
 
 
-data class Player(val name: String, val playerScoreSheet: List<ScoreBox>, var upperTotalScore: Int)
+data class Player(val name: String, val playerScoreSheet: List<ScoreBox>,
+                  var upperTotalScore: Int, var totalScore: Int, var upperScoreBonus: Boolean)
 data class Dice(val button: Button, var isSelected: Boolean, var value: Int)
 data class ScoreBox(val button: Button, var value: Int, var isSelected: Boolean, var isSaved: Boolean)
 
@@ -27,7 +28,9 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
 
-        val upperScoreTextView = findViewById<TextView>(R.id.upperScoreTextView)
+        val player1ScoreTextView = findViewById<TextView>(R.id.player1ScoreTextView)
+        val player2ScoreTextView = findViewById<TextView>(R.id.player2ScoreTextView)
+
         //initializing the roll button and play button
         val rollButton = findViewById<Button>(R.id.rollButton)
         val playButton = findViewById<Button>(R.id.playButton)
@@ -53,11 +56,12 @@ class MainActivity : AppCompatActivity() {
         var thisPlayersTurn = 0
 
         for (n in 0 until numPlayers) {
-            playerList.add(Player("Player ${n + 1}", createScoreSheet(),0))
+            playerList.add(Player("Player ${n + 1}", createScoreSheet(),0,0,false))
         }
 
         var turnCount = 1
         var roundCount = 1
+
 
         //makes the game end after max number of turns
 
@@ -92,20 +96,33 @@ class MainActivity : AppCompatActivity() {
                 }
                 //makes sure a roll has happened and there is actually something selected
                 if (turnCount > 1 && itemIsSelected) {
-                    playerList[thisPlayersTurn].playerScoreSheet.forEach { n ->
-                        if (n.isSelected) {
-                            n.isSaved = true
+                    playerList[thisPlayersTurn].playerScoreSheet.forEachIndexed { index, scoreBox ->
+                        if (scoreBox.isSelected) {
+                            scoreBox.isSaved = true
                         }
-                        if (n.isSaved) {
-                            playerList[thisPlayersTurn].upperTotalScore += n.value
-                            n.button.setBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimary))
+                        if (scoreBox.isSaved) {
+                            //add to total score
+                            playerList[thisPlayersTurn].totalScore += scoreBox.value
+
+                            //if its in the upper section
+                            if(index <= 5) {
+                                playerList[thisPlayersTurn].upperTotalScore += scoreBox.value
+                            }
+
+                            scoreBox.button.setBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimary))
+
                         } else {
-                            n.button.setBackgroundColor(ContextCompat.getColor(this, R.color.colorWhite))
+                            scoreBox.button.setBackgroundColor(ContextCompat.getColor(this, R.color.colorWhite))
                         }
                     }
-                    upperScoreTextView.text = "Player ${thisPlayersTurn + 1}'s Score: ${playerList[thisPlayersTurn].upperTotalScore}"
+
+                    player1ScoreTextView.text = "Player 1's Score: ${playerList[0].totalScore}"
+                    player2ScoreTextView.text = "Player 2's Score: ${playerList[1].totalScore}"
+
+
                     playButton.visibility = (View.INVISIBLE)
                     playButton.isClickable = false
+
                     nextTurnButton.visibility = (View.VISIBLE)
                     nextTurnButton.isClickable = true
 
@@ -130,7 +147,8 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
                 rollButton.text = "ROLL #1"
-                upperScoreTextView.text = "Player ${thisPlayersTurn + 1}'s Score: ${playerList[thisPlayersTurn].upperTotalScore}"
+                player1ScoreTextView.text = "Player 1's Score: ${playerList[0].totalScore}"
+                player2ScoreTextView.text = "Player 2's Score: ${playerList[1].totalScore}"
                 nextTurnButton.visibility = (View.INVISIBLE)
                 nextTurnButton.isClickable = false
                 playButton.isClickable = true
@@ -147,8 +165,7 @@ class MainActivity : AppCompatActivity() {
 
 
     //activates dice buttons
-    private fun startNewRole(diceList: List<Dice>, playersScoreSheet: MutableList<Player>, turnCount: Int, numPlayers: Int, thisPlayersTurn: Int, context: Context)
-    {
+    private fun startNewRole(diceList: List<Dice>, playersScoreSheet: MutableList<Player>, turnCount: Int, numPlayers: Int, thisPlayersTurn: Int, context: Context) {
         Toast.makeText(this,"Player ${thisPlayersTurn+1} Turn #$turnCount",Toast.LENGTH_SHORT).show()
 
         if(turnCount==1)
@@ -214,14 +231,16 @@ class MainActivity : AppCompatActivity() {
 
             }
         }}
-        calcScore(diceList,playersScoreSheet[thisPlayersTurn].playerScoreSheet)
+        calcScore(diceList,playersScoreSheet[thisPlayersTurn].playerScoreSheet, playersScoreSheet[thisPlayersTurn].upperTotalScore ,playersScoreSheet[thisPlayersTurn].upperScoreBonus)
 
     }
+
     @TargetApi(24)
-    private fun calcScore(diceList: List<Dice>, playerScoreSheet: List<ScoreBox>)
-    {
+    private fun calcScore(diceList: List<Dice>, playerScoreSheet: List<ScoreBox>, playerUpperScore: Int, playerUpperScoreBonus: Boolean){
+        var playerUpperScoreBonus = false
         val frequenciesOfNumbers = diceList.groupingBy { it.value }.eachCount()
         var sumOfAllDice = 0
+
 
         //makes sure the values reset to 0 if they are not saved
         playerScoreSheet.forEach { n ->
@@ -230,8 +249,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
         //determines the points in the upper section
-        for(n in 0 until diceList.size)
-        {
+        for(n in 0 until diceList.size){
             when(diceList[n].value){
                 1 -> if(!playerScoreSheet[0].isSaved)
                 {playerScoreSheet[0].value+=1
@@ -319,11 +337,14 @@ class MainActivity : AppCompatActivity() {
                     playerScoreSheet[9].value = 30
                 }
             }
+            //left off here, what to do with upper score bonus and how to add the bonus only once
+            if(playerUpperScore >= 63){
+                playerUpperScoreBonus = true
+            }
+
+
 
         }
-
-
-
 
 
         //displays the value on the upper score buttons
@@ -338,8 +359,7 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun createScoreSheet(): List<ScoreBox>
-    {
+    private fun createScoreSheet(): List<ScoreBox>{
         val onesButton = findViewById<Button>(R.id.onesButton)
         val twosButton = findViewById<Button>(R.id.twosButton)
         val threesButton = findViewById<Button>(R.id.threesButton)
@@ -377,8 +397,7 @@ class MainActivity : AppCompatActivity() {
             lowerScoreBox6, lowerScoreBox7)
     }
 
-    private fun nextTurn(playerList: MutableList<Player>, thisPlayersTurn: Int,diceList: List<Dice>)
-    {
+    private fun nextTurn(playerList: MutableList<Player>, thisPlayersTurn: Int,diceList: List<Dice>){
         //supposed to make all saved boxes green and non saved ones white
         playerList[thisPlayersTurn].playerScoreSheet.forEach { n ->
             if(n.isSaved)
