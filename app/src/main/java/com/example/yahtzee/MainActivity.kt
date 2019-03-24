@@ -17,9 +17,9 @@ import android.widget.Toast
 
 
 data class Player(val name: String, val playerScoreSheet: List<ScoreBox>,
-                  var upperTotalScore: Int, var totalScore: Int, var upperScoreBonus: Boolean)
-data class Dice(val button: Button, var isSelected: Boolean, var value: Int)
-data class ScoreBox(val button: Button, var value: Int, var isSelected: Boolean, var isSaved: Boolean)
+                  var upperTotalScore: Int, var totalScore: Int, var upperScoreBonus: Boolean = false)
+data class Dice(val button: Button, var isSelected: Boolean = false, var value: Int)
+data class ScoreBox(val button: Button, var value: Int = 0, var isSelected: Boolean = false, var isSaved: Boolean = false, var isCalculated: Boolean = false)
 
 class MainActivity : AppCompatActivity() {
 
@@ -56,35 +56,39 @@ class MainActivity : AppCompatActivity() {
         var thisPlayersTurn = 0
 
         for (n in 0 until numPlayers) {
-            playerList.add(Player("Player ${n + 1}", createScoreSheet(),0,0,false))
+            playerList.add(Player("Player ${n + 1}", createScoreSheet(), 0, 0, false))
         }
 
         var turnCount = 1
         var roundCount = 1
 
-
-        //makes the game end after max number of turns
-
             //when you click the ROLL button
             rollButton.setOnClickListener {
-                //make the score boxes clickable again unless they are saved already
-                playerList[thisPlayersTurn].playerScoreSheet.forEach { n ->
-                    if (!n.isSaved) {
-                        n.button.isClickable = true
-                    }
-                }
-                //player can only roll 3 times
-                when {
-                    turnCount <= 3 -> {
-                        rollButton.text = "Roll #${turnCount + 1}"
-                        startNewRole(diceList, playerList, turnCount, numPlayers, thisPlayersTurn, this@MainActivity)
-                        if (turnCount == 3) {
-                            rollButton.text = "No more rolls!"
+                    //make the score boxes clickable again unless they are saved already
+                    playerList[thisPlayersTurn].playerScoreSheet.forEach { n ->
+                        if (!n.isSaved) {
+                            n.button.isClickable = true
                         }
-                        turnCount++
-
                     }
-                }
+                    //player can only roll 3 times
+                    when {
+                        turnCount <= 3 -> {
+                            rollButton.text = "Roll #${turnCount + 1}"
+                            startNewRole(
+                                diceList,
+                                playerList,
+                                turnCount,
+                                numPlayers,
+                                thisPlayersTurn,
+                                this@MainActivity
+                            )
+                            if (turnCount == 3) {
+                                rollButton.text = "No more rolls!"
+                            }
+                            turnCount++
+
+                        }
+                    }
             }
 
             playButton.setOnClickListener {
@@ -101,11 +105,15 @@ class MainActivity : AppCompatActivity() {
                             scoreBox.isSaved = true
                         }
                         if (scoreBox.isSaved) {
-                            //add to total score
-                            playerList[thisPlayersTurn].totalScore += scoreBox.value
+                            if (!scoreBox.isCalculated) {
+                                //add to total score
+                                playerList[thisPlayersTurn].totalScore += scoreBox.value
+                                scoreBox.isCalculated = true
+                            }
+
 
                             //if its in the upper section
-                            if(index <= 5) {
+                            if (index <= 5) {
                                 playerList[thisPlayersTurn].upperTotalScore += scoreBox.value
                             }
 
@@ -143,25 +151,21 @@ class MainActivity : AppCompatActivity() {
                         turnCount = 1
                         nextTurn(playerList, thisPlayersTurn, diceList)
                         roundCount++
-                        Toast.makeText(this,"Round Count: $roundCount",Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "Round Count: $roundCount", Toast.LENGTH_SHORT).show()
                     }
                 }
                 rollButton.text = "ROLL #1"
+
                 player1ScoreTextView.text = "Player 1's Score: ${playerList[0].totalScore}"
                 player2ScoreTextView.text = "Player 2's Score: ${playerList[1].totalScore}"
+
                 nextTurnButton.visibility = (View.INVISIBLE)
                 nextTurnButton.isClickable = false
+
                 playButton.isClickable = true
                 playButton.visibility = (View.VISIBLE)
             }
-        if(roundCount <= 2)
-        {
-            //make a finish button pop up
-            //create new activity for final score screen
-        }
-
     }
-
 
 
     //activates dice buttons
@@ -251,23 +255,23 @@ class MainActivity : AppCompatActivity() {
         //determines the points in the upper section
         for(n in 0 until diceList.size){
             when(diceList[n].value){
-                1 -> if(!playerScoreSheet[0].isSaved)
-                {playerScoreSheet[0].value+=1
+                1 -> {if(!playerScoreSheet[0].isSaved)
+                {playerScoreSheet[0].value+=1}
                 sumOfAllDice+=1}
-                2 -> if(!playerScoreSheet[1].isSaved)
-                {playerScoreSheet[1].value+=2
+                2 -> {if(!playerScoreSheet[1].isSaved)
+                {playerScoreSheet[1].value+=2}
                     sumOfAllDice+=2}
-                3 -> if(!playerScoreSheet[2].isSaved)
-                {playerScoreSheet[2].value+=3
+                3 -> {if(!playerScoreSheet[2].isSaved)
+                {playerScoreSheet[2].value+=3}
                     sumOfAllDice+=3}
-                4 -> if(!playerScoreSheet[3].isSaved)
-                {playerScoreSheet[3].value+=4
+                4 -> {if(!playerScoreSheet[3].isSaved)
+                {playerScoreSheet[3].value+=4}
                     sumOfAllDice+=4}
-                5 -> if(!playerScoreSheet[4].isSaved)
-                {playerScoreSheet[4].value+=5
+                5 -> {if(!playerScoreSheet[4].isSaved)
+                {playerScoreSheet[4].value+=5}
                     sumOfAllDice+=5}
-                6 -> if(!playerScoreSheet[5].isSaved)
-                {playerScoreSheet[5].value+=6
+                6 -> {if(!playerScoreSheet[5].isSaved)
+                {playerScoreSheet[5].value+=6}
                     sumOfAllDice+=6}
             }
         }
@@ -375,20 +379,20 @@ class MainActivity : AppCompatActivity() {
         val chanceButton = findViewById<Button>(R.id.chanceButton)
 
         //initializing score boxes
-        val upperScoreBox1 = ScoreBox(onesButton,0,isSelected = false, isSaved = false)
-        val upperScoreBox2 = ScoreBox(twosButton,0, isSelected = false, isSaved = false)
-        val upperScoreBox3 = ScoreBox(threesButton,0, isSelected = false, isSaved = false)
-        val upperScoreBox4 = ScoreBox(foursButton,0, isSelected = false,isSaved = false)
-        val upperScoreBox5 = ScoreBox(fivesButton,0, isSelected = false, isSaved = false)
-        val upperScoreBox6 = ScoreBox(sixesButton,0, isSelected = false, isSaved = false)
+        val upperScoreBox1 = ScoreBox(onesButton)
+        val upperScoreBox2 = ScoreBox(twosButton)
+        val upperScoreBox3 = ScoreBox(threesButton)
+        val upperScoreBox4 = ScoreBox(foursButton)
+        val upperScoreBox5 = ScoreBox(fivesButton)
+        val upperScoreBox6 = ScoreBox(sixesButton)
         //initializing lower score boxes
-        val lowerScoreBox1 = ScoreBox(threeOfAKindButton,0,isSelected = false,isSaved = false)
-        val lowerScoreBox2 = ScoreBox(fourOfAKindButton,0,isSelected = false,isSaved = false)
-        val lowerScoreBox3 = ScoreBox(fullHouseButton,0,isSelected = false,isSaved = false)
-        val lowerScoreBox4 = ScoreBox(smallStraightButton,0,isSelected = false,isSaved = false)
-        val lowerScoreBox5 = ScoreBox(largeStraightButton,0,isSelected = false,isSaved = false)
-        val lowerScoreBox6 = ScoreBox(yahtzeeButton,0,isSelected = false,isSaved = false)
-        val lowerScoreBox7 = ScoreBox(chanceButton,0,isSelected = false,isSaved = false)
+        val lowerScoreBox1 = ScoreBox(threeOfAKindButton)
+        val lowerScoreBox2 = ScoreBox(fourOfAKindButton)
+        val lowerScoreBox3 = ScoreBox(fullHouseButton)
+        val lowerScoreBox4 = ScoreBox(smallStraightButton)
+        val lowerScoreBox5 = ScoreBox(largeStraightButton)
+        val lowerScoreBox6 = ScoreBox(yahtzeeButton)
+        val lowerScoreBox7 = ScoreBox(chanceButton)
 
         //returns score-sheet to player
         return listOf(upperScoreBox1,upperScoreBox2,upperScoreBox3,
