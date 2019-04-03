@@ -7,6 +7,7 @@ package com.example.yahtzee
 
 import android.annotation.TargetApi
 import android.content.Context
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
@@ -18,7 +19,7 @@ import android.widget.Toast
 
 data class Player(val name: String, val playerScoreSheet: List<ScoreBox>,
                   var upperTotalScore: Int, var totalScore: Int, var upperScoreBonus: Boolean = false)
-data class Dice(val button: Button, var isSelected: Boolean = false, var value: Int)
+data class Dice(val button: Button, var isSelected: Boolean = false, var value: Int = 0)
 data class ScoreBox(val button: Button, var value: Int = 0, var isSelected: Boolean = false, var isSaved: Boolean = false, var isCalculated: Boolean = false)
 
 class MainActivity : AppCompatActivity() {
@@ -35,6 +36,8 @@ class MainActivity : AppCompatActivity() {
         val rollButton = findViewById<Button>(R.id.rollButton)
         val playButton = findViewById<Button>(R.id.playButton)
         val nextTurnButton = findViewById<Button>(R.id.nextTurnButton)
+        val endGameButton  =findViewById<Button>(R.id.endGameButton)
+
         //initializing dice buttons
         val dice1Button = findViewById<Button>(R.id.dice1Button)
         val dice2Button = findViewById<Button>(R.id.dice2Button)
@@ -43,11 +46,11 @@ class MainActivity : AppCompatActivity() {
         val dice5Button = findViewById<Button>(R.id.dice5Button)
 
         //initializing the Dice items
-        val dice1 = Dice(dice1Button, false, 0)
-        val dice2 = Dice(dice2Button, false, 0)
-        val dice3 = Dice(dice3Button, false, 0)
-        val dice4 = Dice(dice4Button, false, 0)
-        val dice5 = Dice(dice5Button, false, 0)
+        val dice1 = Dice(dice1Button)
+        val dice2 = Dice(dice2Button)
+        val dice3 = Dice(dice3Button)
+        val dice4 = Dice(dice4Button)
+        val dice5 = Dice(dice5Button)
         //slapping the dice items into this list of type Dice
         val diceList = listOf(dice1, dice2, dice3, dice4, dice5)
 
@@ -165,6 +168,29 @@ class MainActivity : AppCompatActivity() {
                 playButton.isClickable = true
                 playButton.visibility = (View.VISIBLE)
             }
+        endGameButton.visibility = (View.INVISIBLE)
+        endGameButton.isClickable = false
+        endGameButton.setOnClickListener{
+            if(roundCount == 14) {
+
+                endGameButton.visibility = (View.VISIBLE)
+                endGameButton.isClickable = true
+
+
+            }
+
+
+        }
+
+
+    }
+
+    fun endGameMessage(view: View){
+        val winningPlayer: String
+        val intent = Intent(this,EndGameActivity::class.java)
+
+        startActivity(intent)
+
     }
 
 

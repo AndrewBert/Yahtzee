@@ -323,5 +323,10 @@
             android:layout_marginBottom="16dp" app:layout_constraintBottom_toTopOf="@+id/dice1Button"
             app:layout_constraintStart_toStartOf="@+id/player1ScoreTextView"
     />
+    <Button
+            android:text="GAME OVER"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" tools:layout_editor_absoluteY="420dp"
+            tools:layout_editor_absoluteX="154dp" android:id="@+id/endGameButton" tools:onClick="endGameMessage"/>
 
 </android.support.constraint.ConstraintLayout>

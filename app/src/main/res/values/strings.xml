@@ -23,4 +23,5 @@
     <string name="roll_1">ROLL #1</string>
     <string name="NO_MORE_ROLLS">NO MORE ROLLS</string>
     <string name="next_turn">NEXT TURN</string>
+    <string name="title_activity_end_game">EndGameActivity</string>
 </resources>
