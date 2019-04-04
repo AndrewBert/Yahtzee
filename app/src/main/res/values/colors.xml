@@ -5,4 +5,6 @@
     <color name="colorAccent">#D81B60</color>
     <color name="colorSavedButton">#D81B60</color>
     <color name="colorWhite">#ffffff</color>
+    <color name="colorGrey">#A9A9A9</color>
+    <color name="colorBlack">#000000</color>
 </resources>

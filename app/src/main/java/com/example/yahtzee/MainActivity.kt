@@ -8,6 +8,7 @@ package com.example.yahtzee
 import android.annotation.TargetApi
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
@@ -28,9 +29,11 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-
         val player1ScoreTextView = findViewById<TextView>(R.id.player1ScoreTextView)
         val player2ScoreTextView = findViewById<TextView>(R.id.player2ScoreTextView)
+        // This symbol: > That is next to each players turn on their turn
+        val player1IndicatorTextView = findViewById<TextView>(R.id.player1IndicatorTextView)
+        val player2IndicatorTextView = findViewById<TextView>(R.id.player2IndicatorTextView)
 
         //initializing the roll button and play button
         val rollButton = findViewById<Button>(R.id.rollButton)
@@ -73,6 +76,9 @@ class MainActivity : AppCompatActivity() {
                             n.button.isClickable = true
                         }
                     }
+
+                setPlayerNameColor(thisPlayersTurn, player1ScoreTextView, player2ScoreTextView, player1IndicatorTextView, player2IndicatorTextView)
+
                     //player can only roll 3 times
                     when {
                         turnCount <= 3 -> {
@@ -146,6 +152,7 @@ class MainActivity : AppCompatActivity() {
                         thisPlayersTurn++
                         turnCount = 1
                         nextTurn(playerList, thisPlayersTurn, diceList)
+                        setPlayerNameColor(thisPlayersTurn, player1ScoreTextView, player2ScoreTextView, player1IndicatorTextView, player2IndicatorTextView)
 
                     }
                     //goes to the first players turn
@@ -154,6 +161,7 @@ class MainActivity : AppCompatActivity() {
                         turnCount = 1
                         nextTurn(playerList, thisPlayersTurn, diceList)
                         roundCount++
+                        setPlayerNameColor(thisPlayersTurn, player1ScoreTextView, player2ScoreTextView, player1IndicatorTextView, player2IndicatorTextView)
                         Toast.makeText(this, "Round Count: $roundCount", Toast.LENGTH_SHORT).show()
                     }
                 }
@@ -168,8 +176,10 @@ class MainActivity : AppCompatActivity() {
                 playButton.isClickable = true
                 playButton.visibility = (View.VISIBLE)
             }
+        //End Game Button
         endGameButton.visibility = (View.INVISIBLE)
         endGameButton.isClickable = false
+
         endGameButton.setOnClickListener{
             if(roundCount == 14) {
 
@@ -197,6 +207,7 @@ class MainActivity : AppCompatActivity() {
     //activates dice buttons
     private fun startNewRole(diceList: List<Dice>, playersScoreSheet: MutableList<Player>, turnCount: Int, numPlayers: Int, thisPlayersTurn: Int, context: Context) {
         Toast.makeText(this,"Player ${thisPlayersTurn+1} Turn #$turnCount",Toast.LENGTH_SHORT).show()
+
 
         if(turnCount==1)
         {
@@ -454,12 +465,40 @@ class MainActivity : AppCompatActivity() {
             n.button.isClickable = false
         }
     }
+    //Changes the color of the correlating text view based on whos turn it is
+    private fun setPlayerNameColor(thisPlayersTurn: Int, player1ScoreTextView: TextView,
+                                   player2ScoreTextView: TextView, player1IndicatorTextView: TextView, player2IndicatorTextView: TextView){
+        if(thisPlayersTurn==0){
+
+            player1ScoreTextView.setTextColor(ContextCompat.getColor(this, R.color.colorPrimary))
+            player2ScoreTextView.setTextColor(ContextCompat.getColor(this, R.color.colorGrey))
+            player1IndicatorTextView.visibility = View.VISIBLE
+            player2IndicatorTextView.visibility = View.INVISIBLE
+
+        } else if(thisPlayersTurn==1)
+        {
+            player2ScoreTextView.setTextColor(ContextCompat.getColor(this, R.color.colorPrimary))
+            player1ScoreTextView.setTextColor(ContextCompat.getColor(this, R.color.colorGrey))
+            player1IndicatorTextView.visibility = View.INVISIBLE
+            player2IndicatorTextView.visibility = View.VISIBLE
+        }
+
+    }
 //todo change random algorithm because its pseudo-random??
     /**
      * add end game screen
      * add home menu
      * add data persistence for highest scores
      * add option to play against a bot
+     *
+     */
+
+    /**
+     * LOGS
+     * Version: 0.1 Development
+     * Players names change colors based on whoever's turn it is
+     * Indicators added next to names for further clarity(color blind users as well)
+     * Created setPlayerNameColor function to go along with above change
      *
      */
 }
