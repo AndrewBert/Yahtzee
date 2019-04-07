@@ -17,7 +17,6 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 
-
 data class Player(val name: String, val playerScoreSheet: List<ScoreBox>,
                   var upperTotalScore: Int, var totalScore: Int, var upperScoreBonus: Boolean = false)
 data class Dice(val button: Button, var isSelected: Boolean = false, var value: Int = 0)
@@ -42,6 +41,7 @@ class MainActivity : AppCompatActivity() {
         val endGameButton  =findViewById<Button>(R.id.endGameButton)
 
         //initializing dice buttons
+
         val dice1Button = findViewById<Button>(R.id.dice1Button)
         val dice2Button = findViewById<Button>(R.id.dice2Button)
         val dice3Button = findViewById<Button>(R.id.dice3Button)
@@ -185,14 +185,8 @@ class MainActivity : AppCompatActivity() {
 
                 endGameButton.visibility = (View.VISIBLE)
                 endGameButton.isClickable = true
-
-
             }
-
-
         }
-
-
     }
 
     fun endGameMessage(view: View){
@@ -313,28 +307,37 @@ class MainActivity : AppCompatActivity() {
             }
         }
         //chance
+        if(!playerScoreSheet[12].isSaved){
         playerScoreSheet[12].value = sumOfAllDice
+        }
 
         //checks and calculates 3x, 4x, full house,  and yahtzee
         frequenciesOfNumbers.forEach{ number, frequency ->
             //three Of A Kind check
             if(frequency >= 3){
-                playerScoreSheet[6].value = sumOfAllDice
+                if(!playerScoreSheet[6].isSaved){
+                playerScoreSheet[6].value = sumOfAllDice}
 
                 //full house check
-                if(frequenciesOfNumbers.size == 2 && frequency==3) {
-                    playerScoreSheet[8].value = 25
+
+                if(frequenciesOfNumbers.size == 2 && frequency==3){
+                    if(!playerScoreSheet[8].isSaved){
+                    playerScoreSheet[8].value = 25}
                 }
             }
 
             //four Of A Kind check
             if(frequency >= 4){
-                playerScoreSheet[7].value = sumOfAllDice
+                if(!playerScoreSheet[7].isSaved){
+                    playerScoreSheet[7].value = sumOfAllDice
+                }
             }
 
             //yahtzee check
             if(frequency == 5){
-                playerScoreSheet[11].value = 50
+                if(!playerScoreSheet[11].isSaved){
+                    playerScoreSheet[11].value = 50
+                }
             }
 
             //large straight check
@@ -344,15 +347,18 @@ class MainActivity : AppCompatActivity() {
                 val listOfValues  = mutableListOf<Int>()
 
                 for(n in 0 until diceList.size) {
-
                     listOfValues.add(diceList[n].value)
                 }
                 //sorted list of dice values
                 val sortedListOfValues = listOfValues.sorted()
 
                 if(sortedListOfValues == mutableListOf(1,2,3,4,5) || sortedListOfValues == mutableListOf(2,3,4,5,6)) {
-                    playerScoreSheet[9].value = 30
+                    if(!playerScoreSheet[9].isSaved){
+                        playerScoreSheet[9].value = 30
+                    }
+                    if(!playerScoreSheet[10].isSaved){
                     playerScoreSheet[10].value = 40
+                    }
                 }
             }
 
@@ -374,30 +380,20 @@ class MainActivity : AppCompatActivity() {
                 if(sortedDistinctListOfValues == mutableListOf(1,2,3,4) || sortedDistinctListOfValues == mutableListOf(1,2,3,4,5) ||
                     sortedDistinctListOfValues == mutableListOf(1,2,3,4,6) || sortedDistinctListOfValues == mutableListOf(2,3,4,5) ||
                     sortedDistinctListOfValues == mutableListOf(1,3,4,5,6) || sortedDistinctListOfValues == mutableListOf(3,4,5,6)) {
-
-                    playerScoreSheet[9].value = 30
+                    if(!playerScoreSheet[9].isSaved){playerScoreSheet[9].value = 30}
                 }
             }
             //left off here, what to do with upper score bonus and how to add the bonus only once
             if(playerUpperScore >= 63){
                 playerUpperScoreBonus = true
             }
-
-
-
         }
-
-
         //displays the value on the upper score buttons
         for(n in 0 until playerScoreSheet.size) {
             //stops the number from updating if you have selected to save it, might be a bad implementation bc
             //the numbers still change in the background
-            //if(!playerScoreSheet[n].isSaved) {}
                 playerScoreSheet[n].button.text = playerScoreSheet[n].value.toString()
-
         }
-
-
     }
 
     private fun createScoreSheet(): List<ScoreBox>{
@@ -496,12 +492,7 @@ class MainActivity : AppCompatActivity() {
     /**
      * LOGS
      * Version: 0.1 Development
-     * Players names change colors based on whoever's turn it is
-     * Indicators added next to names for further clarity(color blind users as well)
-     * Created setPlayerNameColor function to go along with above change
+     *
      *
      */
 }
-
-
-
