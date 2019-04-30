@@ -8,7 +8,6 @@ package com.example.yahtzee
 import android.annotation.TargetApi
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
@@ -16,9 +15,11 @@ import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import kotlinx.android.synthetic.main.activity_main.*
 
 data class Player(val name: String, val playerScoreSheet: List<ScoreBox>,
-                  var upperTotalScore: Int, var totalScore: Int, var upperScoreBonus: Boolean = false)
+                  var upperTotalScore: Int, var totalScore: Int, var upperScoreBonus: Boolean = false,
+                  var upperScoreBonusActivated: Boolean = false)
 data class Dice(val button: Button, var isSelected: Boolean = false, var value: Int = 0)
 data class ScoreBox(val button: Button, var value: Int = 0, var isSelected: Boolean = false, var isSaved: Boolean = false, var isCalculated: Boolean = false)
 
@@ -34,6 +35,8 @@ class MainActivity : AppCompatActivity() {
         val player1IndicatorTextView = findViewById<TextView>(R.id.player1IndicatorTextView)
         val player2IndicatorTextView = findViewById<TextView>(R.id.player2IndicatorTextView)
 
+        val upperScoreBonusTextView = findViewById<TextView>(R.id.upperScoreBonusTextView)
+
         //initializing the roll button and play button
         val rollButton = findViewById<Button>(R.id.rollButton)
         val playButton = findViewById<Button>(R.id.playButton)
@@ -41,7 +44,6 @@ class MainActivity : AppCompatActivity() {
         val endGameButton  =findViewById<Button>(R.id.endGameButton)
 
         //initializing dice buttons
-
         val dice1Button = findViewById<Button>(R.id.dice1Button)
         val dice2Button = findViewById<Button>(R.id.dice2Button)
         val dice3Button = findViewById<Button>(R.id.dice3Button)
@@ -60,6 +62,7 @@ class MainActivity : AppCompatActivity() {
         val numPlayers = 2
         val playerList = mutableListOf<Player>()
         var thisPlayersTurn = 0
+        val maxNumberOfRounds = 0 //for testing purposes
 
         for (n in 0 until numPlayers) {
             playerList.add(Player("Player ${n + 1}", createScoreSheet(), 0, 0, false))
@@ -100,6 +103,9 @@ class MainActivity : AppCompatActivity() {
                     }
             }
 
+
+
+
             playButton.setOnClickListener {
                 var itemIsSelected = false
                 playerList[thisPlayersTurn].playerScoreSheet.forEach { n ->
@@ -117,13 +123,12 @@ class MainActivity : AppCompatActivity() {
                             if (!scoreBox.isCalculated) {
                                 //add to total score
                                 playerList[thisPlayersTurn].totalScore += scoreBox.value
+                                //if its in the upper section
+                                if (index <= 5) {
+                                    playerList[thisPlayersTurn].upperTotalScore += scoreBox.value
+                                }
                                 scoreBox.isCalculated = true
-                            }
 
-
-                            //if its in the upper section
-                            if (index <= 5) {
-                                playerList[thisPlayersTurn].upperTotalScore += scoreBox.value
                             }
 
                             scoreBox.button.setBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimary))
@@ -135,7 +140,10 @@ class MainActivity : AppCompatActivity() {
 
                     player1ScoreTextView.text = "Player 1's Score: ${playerList[0].totalScore}"
                     player2ScoreTextView.text = "Player 2's Score: ${playerList[1].totalScore}"
+                    //test
+                    //upperScoreTotalTextView.text = "Upper Score: ${playerList[thisPlayersTurn].upperTotalScore}"
 
+                    activateUpperBonus(playerList, thisPlayersTurn)
 
                     playButton.visibility = (View.INVISIBLE)
                     playButton.isClickable = false
@@ -145,7 +153,18 @@ class MainActivity : AppCompatActivity() {
 
                 }
             }
+
+
+
             nextTurnButton.setOnClickListener {
+
+                if(roundCount == maxNumberOfRounds + 1) {
+                    endGameButton.visibility = (View.VISIBLE)
+                    endGameButton.isClickable = true
+
+                }
+
+
                 when {
                     //goes to next players turn
                     (thisPlayersTurn + 1) < numPlayers -> {
@@ -170,38 +189,55 @@ class MainActivity : AppCompatActivity() {
                 player1ScoreTextView.text = "Player 1's Score: ${playerList[0].totalScore}"
                 player2ScoreTextView.text = "Player 2's Score: ${playerList[1].totalScore}"
 
+                if(playerList[thisPlayersTurn].upperScoreBonusActivated){
+                    upperScoreBonusTextView.visibility = View.VISIBLE
+                }
+                else {
+                    upperScoreBonusTextView.visibility = View.INVISIBLE
+                }
+
                 nextTurnButton.visibility = (View.INVISIBLE)
                 nextTurnButton.isClickable = false
 
                 playButton.isClickable = true
                 playButton.visibility = (View.VISIBLE)
             }
-        //End Game Button
-        endGameButton.visibility = (View.INVISIBLE)
-        endGameButton.isClickable = false
+
+
 
         endGameButton.setOnClickListener{
-            if(roundCount == 14) {
+            endGameMessage(playerList)
 
-                endGameButton.visibility = (View.VISIBLE)
-                endGameButton.isClickable = true
-            }
         }
     }
 
-    fun endGameMessage(view: View){
-        val winningPlayer: String
-        val intent = Intent(this,EndGameActivity::class.java)
+    private fun endGameMessage(playerList: MutableList<Player>){
 
+        val intent = Intent(this,EndGameActivity::class.java)
+        intent.putExtra("player1Score",playerList[0].totalScore)
+        intent.putExtra("player2Score", playerList[1].totalScore)
         startActivity(intent)
 
     }
 
+    private fun activateUpperBonus(playersScoreSheet: MutableList<Player>, thisPlayersTurn: Int)
+    {
+        if(playersScoreSheet[thisPlayersTurn].upperTotalScore >= 63){
+            playersScoreSheet[thisPlayersTurn].upperScoreBonus = true
+            if(playersScoreSheet[thisPlayersTurn].upperScoreBonus&&!playersScoreSheet[thisPlayersTurn].upperScoreBonusActivated){
+                upperScoreBonusTextView.visibility = View.VISIBLE
+                playersScoreSheet[thisPlayersTurn].totalScore += 35
+            }
+            if(playersScoreSheet[thisPlayersTurn].upperScoreBonus){
+
+                playersScoreSheet[thisPlayersTurn].upperScoreBonusActivated = true
+            }
+        }
+    }
 
     //activates dice buttons
     private fun startNewRole(diceList: List<Dice>, playersScoreSheet: MutableList<Player>, turnCount: Int, numPlayers: Int, thisPlayersTurn: Int, context: Context) {
         Toast.makeText(this,"Player ${thisPlayersTurn+1} Turn #$turnCount",Toast.LENGTH_SHORT).show()
-
 
         if(turnCount==1)
         {
@@ -266,15 +302,22 @@ class MainActivity : AppCompatActivity() {
 
             }
         }}
-        calcScore(diceList,playersScoreSheet[thisPlayersTurn].playerScoreSheet, playersScoreSheet[thisPlayersTurn].upperTotalScore ,playersScoreSheet[thisPlayersTurn].upperScoreBonus)
+        calcScore(diceList,playersScoreSheet[thisPlayersTurn].playerScoreSheet, playersScoreSheet[thisPlayersTurn].upperTotalScore,
+            playersScoreSheet[thisPlayersTurn].upperScoreBonus, playersScoreSheet[thisPlayersTurn].totalScore,
+            playersScoreSheet[thisPlayersTurn].upperScoreBonusActivated)
 
+        //calculates and returns total score
+        playersScoreSheet[thisPlayersTurn].totalScore = calcPlayerTotalScore(playersScoreSheet, thisPlayersTurn)
     }
 
     @TargetApi(24)
-    private fun calcScore(diceList: List<Dice>, playerScoreSheet: List<ScoreBox>, playerUpperScore: Int, playerUpperScoreBonus: Boolean){
-        var playerUpperScoreBonus = false
+    private fun calcScore(diceList: List<Dice>, playerScoreSheet: List<ScoreBox>, playerUpperScore: Int, playerUpperScoreBonus: Boolean, playerTotalScore: Int, playerUpperScoreBonusActivated: Boolean){
+       /* var playerUpperScoreBonus = playerUpperScoreBonus
+        var playerTotalScore = playerTotalScore
+        var playerUpperScoreBonusActivated = playerUpperScoreBonusActivated*/
         val frequenciesOfNumbers = diceList.groupingBy { it.value }.eachCount()
         var sumOfAllDice = 0
+
 
 
         //makes sure the values reset to 0 if they are not saved
@@ -312,7 +355,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         //checks and calculates 3x, 4x, full house,  and yahtzee
-        frequenciesOfNumbers.forEach{ number, frequency ->
+        frequenciesOfNumbers.forEach{ (number, frequency) ->
             //three Of A Kind check
             if(frequency >= 3){
                 if(!playerScoreSheet[6].isSaved){
@@ -383,18 +426,34 @@ class MainActivity : AppCompatActivity() {
                     if(!playerScoreSheet[9].isSaved){playerScoreSheet[9].value = 30}
                 }
             }
-            //left off here, what to do with upper score bonus and how to add the bonus only once
-            if(playerUpperScore >= 63){
-                playerUpperScoreBonus = true
-            }
         }
-        //displays the value on the upper score buttons
+
+
+
+        //displays the value on the score buttons
         for(n in 0 until playerScoreSheet.size) {
             //stops the number from updating if you have selected to save it, might be a bad implementation bc
             //the numbers still change in the background
-                playerScoreSheet[n].button.text = playerScoreSheet[n].value.toString()
+            playerScoreSheet[n].button.text = playerScoreSheet[n].value.toString()
         }
+
+        //ended here
+        upperScoreBonusTextView.setText("BONUS +35")
     }
+
+    private fun calcPlayerTotalScore(playersScoreSheet: MutableList<Player>, thisPlayersTurn: Int): Int{
+
+        var totalScore = playersScoreSheet[thisPlayersTurn].totalScore
+        for(scoreBox in playersScoreSheet[thisPlayersTurn].playerScoreSheet) {
+            if(scoreBox.isSaved)
+            totalScore += scoreBox.value
+        }
+
+        return totalScore
+
+    }
+
+
 
     private fun createScoreSheet(): List<ScoreBox>{
         val onesButton = findViewById<Button>(R.id.onesButton)
