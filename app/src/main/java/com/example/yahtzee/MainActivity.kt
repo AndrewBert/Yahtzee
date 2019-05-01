@@ -62,7 +62,7 @@ class MainActivity : AppCompatActivity() {
         val numPlayers = 2
         val playerList = mutableListOf<Player>()
         var thisPlayersTurn = 0
-        val maxNumberOfRounds = 0 //for testing purposes
+        val maxNumberOfRounds =  13//for testing purposes
 
         for (n in 0 until numPlayers) {
             playerList.add(Player("Player ${n + 1}", createScoreSheet(), 0, 0, false))
@@ -114,6 +114,7 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
                 //makes sure a roll has happened and there is actually something selected
+                val context: Context = this
                 if (turnCount > 1 && itemIsSelected) {
                     playerList[thisPlayersTurn].playerScoreSheet.forEachIndexed { index, scoreBox ->
                         if (scoreBox.isSelected) {
@@ -131,10 +132,13 @@ class MainActivity : AppCompatActivity() {
 
                             }
 
-                            scoreBox.button.setBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimary))
+
+                            scoreBox.button.setBackgroundResource(R.drawable.button_background_orange)
+                            scoreBox.button.setTextColor(ContextCompat.getColor(context,R.color.colorWhite))
 
                         } else {
-                            scoreBox.button.setBackgroundColor(ContextCompat.getColor(this, R.color.colorWhite))
+                            scoreBox.button.setBackgroundResource(R.drawable.button_background_white)
+                            scoreBox.button.setTextColor(ContextCompat.getColor(context,R.color.colorOrange))
                         }
                     }
 
@@ -151,19 +155,14 @@ class MainActivity : AppCompatActivity() {
                     nextTurnButton.visibility = (View.VISIBLE)
                     nextTurnButton.isClickable = true
 
+                    rollButton.isClickable = false
+
                 }
             }
 
 
 
             nextTurnButton.setOnClickListener {
-
-                if(roundCount == maxNumberOfRounds + 1) {
-                    endGameButton.visibility = (View.VISIBLE)
-                    endGameButton.isClickable = true
-
-                }
-
 
                 when {
                     //goes to next players turn
@@ -184,6 +183,15 @@ class MainActivity : AppCompatActivity() {
                         Toast.makeText(this, "Round Count: $roundCount", Toast.LENGTH_SHORT).show()
                     }
                 }
+
+                //Displays end game button
+                if(roundCount == maxNumberOfRounds) {
+                    /*endGameButton.visibility = (View.VISIBLE)
+                    endGameButton.isClickable = true*/
+                    endGameMessage(playerList)
+
+                }
+
                 rollButton.text = "ROLL #1"
 
                 player1ScoreTextView.text = "Player 1's Score: ${playerList[0].totalScore}"
@@ -201,14 +209,16 @@ class MainActivity : AppCompatActivity() {
 
                 playButton.isClickable = true
                 playButton.visibility = (View.VISIBLE)
+
+                rollButton.isClickable = true
             }
 
 
-
+        /*
         endGameButton.setOnClickListener{
             endGameMessage(playerList)
 
-        }
+        }*/
     }
 
     private fun endGameMessage(playerList: MutableList<Player>){
@@ -244,7 +254,8 @@ class MainActivity : AppCompatActivity() {
             diceList.forEach { n->
                 n.isSelected = false
                 n.value = 0
-                n.button.setBackgroundColor(ContextCompat.getColor(context, R.color.colorWhite))}
+                n.button.setBackgroundResource(R.drawable.button_background_white)
+            }
         }
         for(n in 0..4) {
             //create a random number
@@ -257,20 +268,20 @@ class MainActivity : AppCompatActivity() {
         }
         //set click listeners for all of the dice buttons in an efficient loop
         diceList.forEach { n-> n.button.setOnClickListener{
-            if(!n.isSelected)
-            {
+            if(!n.isSelected) {
                 n.isSelected=true
-                n.button.setBackgroundColor(ContextCompat.getColor(context, R.color.colorSavedButton))
+                n.button.setBackgroundResource(R.drawable.button_background_orange)
+                n.button.setTextColor(ContextCompat.getColor(context,R.color.colorBlack))
             }
-            else
-            {
+            else{
                 n.isSelected=false
-                n.button.setBackgroundColor(ContextCompat.getColor(context, R.color.colorWhite))
+                n.button.setBackgroundResource(R.drawable.button_background_white)
+                n.button.setTextColor(ContextCompat.getColor(context,R.color.colorBlack))
 
             }
         }}
 
-        //set click listeners for all of the upper score buttons in an efficient loop
+        //set click listeners for all of the score buttons in an efficient loop
         playersScoreSheet[thisPlayersTurn].playerScoreSheet.forEach { n -> n.button.setOnClickListener{
             if(!n.isSaved) {
                 if (!n.isSelected) {
@@ -280,9 +291,11 @@ class MainActivity : AppCompatActivity() {
                             n.isSelected = false
                             n.button.setBackgroundColor(ContextCompat.getColor(this, R.color.colorWhite))
                         }*/
-                            n.isSelected = false
+                        n.isSelected = false
                         if(!n.isSaved) {
-                            n.button.setBackgroundColor(ContextCompat.getColor(context,R.color.colorWhite))
+                            //n.button.setBackgroundColor(ContextCompat.getColor(context,R.color.colorWhite))
+                            n.button.setBackgroundResource(R.drawable.button_background_white)
+                            n.button.setTextColor(ContextCompat.getColor(context,R.color.colorOrange))
                         }
                     }
                     n.isSelected = true
@@ -293,10 +306,15 @@ class MainActivity : AppCompatActivity() {
                 }
                 if(n.isSelected)
                 {
-                    n.button.setBackgroundColor(ContextCompat.getColor(context, R.color.colorSavedButton))
+                    //n.button.setBackgroundColor(ContextCompat.getColor(context, R.color.colorSavedButton))
+                    n.button.setBackgroundResource(R.drawable.button_background_orange)
+                    n.button.setTextColor(ContextCompat.getColor(context,R.color.colorWhite))
+
                 }
                 else {
-                    n.button.setBackgroundColor(ContextCompat.getColor(context, R.color.colorWhite))
+                    //n.button.setBackgroundColor(ContextCompat.getColor(context, R.color.colorWhite))
+                    n.button.setBackgroundResource(R.drawable.button_background_white)
+                    n.button.setTextColor(ContextCompat.getColor(context,R.color.colorOrange))
             }
 
 
@@ -494,26 +512,31 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun nextTurn(playerList: MutableList<Player>, thisPlayersTurn: Int,diceList: List<Dice>){
+
         //supposed to make all saved boxes green and non saved ones white
         playerList[thisPlayersTurn].playerScoreSheet.forEach { n ->
             if(n.isSaved)
             {
-
-                n.button.setBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimary))
+                n.button.setBackgroundResource(R.drawable.button_background_orange)
+                n.button.setTextColor(ContextCompat.getColor(this,R.color.colorWhite))
             }
             else
-                n.button.setBackgroundColor(ContextCompat.getColor(this, R.color.colorWhite))
+                n.button.setBackgroundResource(R.drawable.button_background_white)
+                n.button.setTextColor(ContextCompat.getColor(this,R.color.colorOrange))
         }
 
         diceList.forEach { n->
             n.button.isClickable = false
             n.button.text = "0"
-            n.button.setBackgroundColor(ContextCompat.getColor(this, R.color.colorWhite))
+            n.button.setBackgroundResource(R.drawable.button_background_white)
         }
 
         playerList[thisPlayersTurn].playerScoreSheet.forEach { n->
             //shows appropriate saved score-boxes
-            if(n.isSaved) { n.button.text = n.value.toString()}
+            if(n.isSaved) {
+                n.button.text = n.value.toString()
+                n.button.setTextColor(ContextCompat.getColor(this,R.color.colorWhite))
+            }
             else{
                 n.button.text = "0"
             }
@@ -525,14 +548,14 @@ class MainActivity : AppCompatActivity() {
                                    player2ScoreTextView: TextView, player1IndicatorTextView: TextView, player2IndicatorTextView: TextView){
         if(thisPlayersTurn==0){
 
-            player1ScoreTextView.setTextColor(ContextCompat.getColor(this, R.color.colorPrimary))
+            player1ScoreTextView.setTextColor(ContextCompat.getColor(this,R.color.colorOrange))
             player2ScoreTextView.setTextColor(ContextCompat.getColor(this, R.color.colorGrey))
             player1IndicatorTextView.visibility = View.VISIBLE
             player2IndicatorTextView.visibility = View.INVISIBLE
 
         } else if(thisPlayersTurn==1)
         {
-            player2ScoreTextView.setTextColor(ContextCompat.getColor(this, R.color.colorPrimary))
+            player2ScoreTextView.setTextColor(ContextCompat.getColor(this,R.color.colorOrange))
             player1ScoreTextView.setTextColor(ContextCompat.getColor(this, R.color.colorGrey))
             player1IndicatorTextView.visibility = View.INVISIBLE
             player2IndicatorTextView.visibility = View.VISIBLE

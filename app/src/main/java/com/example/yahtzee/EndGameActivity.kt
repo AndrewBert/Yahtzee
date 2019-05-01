@@ -14,8 +14,8 @@ class EndGameActivity : AppCompatActivity() {
         //val player1Score: String = player1ScoreTextView?.text.toString()
         //val player2Score: String = player2ScoreTextView?.text.toString()
 
-        val player1Score = intent.getStringExtra("player1Score")?.toInt()?: 0
-        val player2Score = intent.getStringExtra("player2Score")?.toInt()?: 0
+        val player1Score = intent.getIntExtra("player1Score", 999)
+        val player2Score = intent.getIntExtra("player2Score", 999)
 
 
         var winningPlayerNumber = 0
