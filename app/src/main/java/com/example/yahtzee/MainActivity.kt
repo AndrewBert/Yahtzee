@@ -31,9 +31,6 @@ class MainActivity : AppCompatActivity() {
 
         val player1ScoreTextView = findViewById<TextView>(R.id.player1ScoreTextView)
         val player2ScoreTextView = findViewById<TextView>(R.id.player2ScoreTextView)
-        // This symbol: > That is next to each players turn on their turn
-        val player1IndicatorTextView = findViewById<TextView>(R.id.player1IndicatorTextView)
-        val player2IndicatorTextView = findViewById<TextView>(R.id.player2IndicatorTextView)
 
         val upperScoreBonusTextView = findViewById<TextView>(R.id.upperScoreBonusTextView)
 
@@ -41,7 +38,7 @@ class MainActivity : AppCompatActivity() {
         val rollButton = findViewById<Button>(R.id.rollButton)
         val playButton = findViewById<Button>(R.id.playButton)
         val nextTurnButton = findViewById<Button>(R.id.nextTurnButton)
-        val endGameButton  =findViewById<Button>(R.id.endGameButton)
+        //val endGameButton  =findViewById<Button>(R.id.endGameButton)
 
         //initializing dice buttons
         val dice1Button = findViewById<Button>(R.id.dice1Button)
@@ -80,7 +77,7 @@ class MainActivity : AppCompatActivity() {
                         }
                     }
 
-                setPlayerNameColor(thisPlayersTurn, player1ScoreTextView, player2ScoreTextView, player1IndicatorTextView, player2IndicatorTextView)
+                setPlayerNameColor(thisPlayersTurn, player1ScoreTextView, player2ScoreTextView)
 
                     //player can only roll 3 times
                     when {
@@ -142,8 +139,8 @@ class MainActivity : AppCompatActivity() {
                         }
                     }
 
-                    player1ScoreTextView.text = "Player 1's Score: ${playerList[0].totalScore}"
-                    player2ScoreTextView.text = "Player 2's Score: ${playerList[1].totalScore}"
+                    player1ScoreTextView.text = "${playerList[0].totalScore}"
+                    player2ScoreTextView.text = "${playerList[1].totalScore}"
                     //test
                     //upperScoreTotalTextView.text = "Upper Score: ${playerList[thisPlayersTurn].upperTotalScore}"
 
@@ -170,7 +167,7 @@ class MainActivity : AppCompatActivity() {
                         thisPlayersTurn++
                         turnCount = 1
                         nextTurn(playerList, thisPlayersTurn, diceList)
-                        setPlayerNameColor(thisPlayersTurn, player1ScoreTextView, player2ScoreTextView, player1IndicatorTextView, player2IndicatorTextView)
+                        setPlayerNameColor(thisPlayersTurn, player1ScoreTextView, player2ScoreTextView)
 
                     }
                     //goes to the first players turn
@@ -179,7 +176,7 @@ class MainActivity : AppCompatActivity() {
                         turnCount = 1
                         nextTurn(playerList, thisPlayersTurn, diceList)
                         roundCount++
-                        setPlayerNameColor(thisPlayersTurn, player1ScoreTextView, player2ScoreTextView, player1IndicatorTextView, player2IndicatorTextView)
+                        setPlayerNameColor(thisPlayersTurn, player1ScoreTextView, player2ScoreTextView)
                         Toast.makeText(this, "Round Count: $roundCount", Toast.LENGTH_SHORT).show()
                     }
                 }
@@ -194,8 +191,8 @@ class MainActivity : AppCompatActivity() {
 
                 rollButton.text = "ROLL #1"
 
-                player1ScoreTextView.text = "Player 1's Score: ${playerList[0].totalScore}"
-                player2ScoreTextView.text = "Player 2's Score: ${playerList[1].totalScore}"
+                player1ScoreTextView.text = "${playerList[0].totalScore}"
+                player2ScoreTextView.text = "${playerList[1].totalScore}"
 
                 if(playerList[thisPlayersTurn].upperScoreBonusActivated){
                     upperScoreBonusTextView.visibility = View.VISIBLE
@@ -307,7 +304,7 @@ class MainActivity : AppCompatActivity() {
                 if(n.isSelected)
                 {
                     //n.button.setBackgroundColor(ContextCompat.getColor(context, R.color.colorSavedButton))
-                    n.button.setBackgroundResource(R.drawable.button_background_orange)
+                    n.button.setBackgroundResource(R.drawable.button_background_orange_darker)
                     n.button.setTextColor(ContextCompat.getColor(context,R.color.colorWhite))
 
                 }
@@ -329,13 +326,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     @TargetApi(24)
-    private fun calcScore(diceList: List<Dice>, playerScoreSheet: List<ScoreBox>, playerUpperScore: Int, playerUpperScoreBonus: Boolean, playerTotalScore: Int, playerUpperScoreBonusActivated: Boolean){
-       /* var playerUpperScoreBonus = playerUpperScoreBonus
-        var playerTotalScore = playerTotalScore
-        var playerUpperScoreBonusActivated = playerUpperScoreBonusActivated*/
+    private fun calcScore(diceList: List<Dice>, playerScoreSheet: List<ScoreBox>, playerUpperScore: Int,
+                          playerUpperScoreBonus: Boolean, playerTotalScore: Int, playerUpperScoreBonusActivated: Boolean){
         val frequenciesOfNumbers = diceList.groupingBy { it.value }.eachCount()
         var sumOfAllDice = 0
-
 
 
         //makes sure the values reset to 0 if they are not saved
@@ -463,8 +457,11 @@ class MainActivity : AppCompatActivity() {
 
         var totalScore = playersScoreSheet[thisPlayersTurn].totalScore
         for(scoreBox in playersScoreSheet[thisPlayersTurn].playerScoreSheet) {
-            if(scoreBox.isSaved)
-            totalScore += scoreBox.value
+            if(scoreBox.isSaved&&!scoreBox.isCalculated) {
+                scoreBox.isCalculated = true
+                totalScore += scoreBox.value
+
+            }
         }
 
         return totalScore
@@ -545,20 +542,17 @@ class MainActivity : AppCompatActivity() {
     }
     //Changes the color of the correlating text view based on whos turn it is
     private fun setPlayerNameColor(thisPlayersTurn: Int, player1ScoreTextView: TextView,
-                                   player2ScoreTextView: TextView, player1IndicatorTextView: TextView, player2IndicatorTextView: TextView){
+                                   player2ScoreTextView: TextView){
         if(thisPlayersTurn==0){
 
             player1ScoreTextView.setTextColor(ContextCompat.getColor(this,R.color.colorOrange))
             player2ScoreTextView.setTextColor(ContextCompat.getColor(this, R.color.colorGrey))
-            player1IndicatorTextView.visibility = View.VISIBLE
-            player2IndicatorTextView.visibility = View.INVISIBLE
 
         } else if(thisPlayersTurn==1)
         {
             player2ScoreTextView.setTextColor(ContextCompat.getColor(this,R.color.colorOrange))
             player1ScoreTextView.setTextColor(ContextCompat.getColor(this, R.color.colorGrey))
-            player1IndicatorTextView.visibility = View.INVISIBLE
-            player2IndicatorTextView.visibility = View.VISIBLE
+
         }
 
     }
