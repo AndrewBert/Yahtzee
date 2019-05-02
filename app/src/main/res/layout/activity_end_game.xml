@@ -8,7 +8,7 @@
         tools:context=".EndGameActivity">
 
     <TextView
-            android:text="Player 1 Score"
+            android:text="0"
             android:layout_width="174dp"
             android:layout_height="174dp"
             android:id="@+id/player1FinalScoreTV"
@@ -18,23 +18,63 @@
             android:layout_marginBottom="16dp" app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintVertical_bias="0.066" android:layout_marginEnd="16dp"
             app:layout_constraintEnd_toEndOf="parent" android:layout_marginRight="16dp"
-            app:layout_constraintHorizontal_bias="0.0" android:textSize="36sp"/>
+            app:layout_constraintHorizontal_bias="0.0" android:textSize="100sp" android:gravity="center"
+            android:textColorHighlight="#00BDB637" android:textStyle="bold" android:background="#00838383"/>
     <TextView
-            android:text="Player 2 Score"
+            android:text="0"
             android:layout_width="174dp"
             android:layout_height="174dp"
             android:id="@+id/player2FinalScoreTV"
             app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="16dp"
             android:layout_marginRight="16dp"
             app:layout_constraintTop_toTopOf="@+id/player1FinalScoreTV"
-            app:layout_constraintBottom_toBottomOf="@+id/player1FinalScoreTV" android:textSize="36sp"/>
+            app:layout_constraintBottom_toBottomOf="@+id/player1FinalScoreTV" android:textSize="100sp"
+            android:gravity="center" android:textStyle="bold"/>
     <TextView
             android:text="Winning Player"
-            android:layout_width="243dp"
-            android:layout_height="61dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:id="@+id/winningPlayerTV" android:layout_marginTop="59dp"
             app:layout_constraintTop_toBottomOf="@+id/player1FinalScoreTV"
             app:layout_constraintStart_toStartOf="@+id/player1FinalScoreTV"
             app:layout_constraintEnd_toEndOf="@+id/player2FinalScoreTV"
-            android:textSize="30sp"/>
+            android:textSize="45sp" android:gravity="center"/>
+    <TextView
+            android:text="Player 1"
+            android:layout_width="186dp"
+            android:layout_height="77dp"
+            android:id="@+id/player1TV" android:textSize="50sp"
+            app:layout_constraintStart_toStartOf="@+id/player1FinalScoreTV"
+            android:gravity="center" android:layout_marginBottom="148dp"
+            app:layout_constraintBottom_toBottomOf="@+id/player1FinalScoreTV"
+            app:layout_constraintEnd_toEndOf="@+id/player1FinalScoreTV"/>
+    <TextView
+            android:text="Player 2"
+            android:layout_width="186dp"
+            android:layout_height="77dp"
+            android:id="@+id/player2TV" android:textSize="50sp"
+            android:gravity="center"
+            app:layout_constraintStart_toStartOf="@+id/player2FinalScoreTV"
+            app:layout_constraintEnd_toEndOf="@+id/player2FinalScoreTV"
+            app:layout_constraintBottom_toBottomOf="@+id/player1TV"/>
+    <Button
+            android:text="New Game"
+            android:layout_width="wrap_content"
+            android:layout_height="67dp"
+            android:id="@+id/startButton"
+            android:background="@drawable/button_background_orange" android:textColor="#FFFFFF"
+            android:layout_marginTop="32dp"
+            app:layout_constraintTop_toBottomOf="@+id/winningPlayerTV" android:layout_marginStart="8dp"
+            app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="8dp" android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toEndOf="parent" android:layout_marginRight="8dp"/>
+    <Button
+            android:text="Main Menu"
+            android:layout_width="wrap_content"
+            android:layout_height="67dp"
+            android:id="@+id/mainMenuButton"
+            android:background="@drawable/button_background_orange" android:textColor="#FFFFFF"
+            android:layout_marginTop="132dp"
+            app:layout_constraintTop_toBottomOf="@+id/winningPlayerTV"
+            app:layout_constraintStart_toStartOf="@+id/startButton"
+            app:layout_constraintEnd_toEndOf="@+id/startButton"/>
 </android.support.constraint.ConstraintLayout>

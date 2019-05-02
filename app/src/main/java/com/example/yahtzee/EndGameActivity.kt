@@ -1,7 +1,10 @@
 package com.example.yahtzee
 
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v4.content.ContextCompat
+import android.widget.Button
 import android.widget.TextView
 
 class EndGameActivity : AppCompatActivity() {
@@ -24,6 +27,10 @@ class EndGameActivity : AppCompatActivity() {
         val player1ScoreTV = findViewById<TextView>(R.id.player1FinalScoreTV)
         val player2ScoreTV = findViewById<TextView>(R.id.player2FinalScoreTV)
         val winningPlayerTV = findViewById<TextView>(R.id.winningPlayerTV)
+        val player1TV = findViewById<TextView>(R.id.player1TV)
+        val player2TV = findViewById<TextView>(R.id.player2TV)
+
+
 
         player1ScoreTV.text = player1Score.toString()
         player2ScoreTV.text = player2Score.toString()
@@ -41,6 +48,29 @@ class EndGameActivity : AppCompatActivity() {
             4   -> winningPlayerTV.text = "Something weird happened"
             0   -> winningPlayerTV.text = "Player score error"
         }
+
+        if(winningPlayerNumber==1){
+            player1TV.setTextColor(ContextCompat.getColor(this,R.color.colorOrange))
+            player1ScoreTV.setTextColor(ContextCompat.getColor(this,R.color.colorOrange))
+        }else if(winningPlayerNumber==2){
+            player2TV.setTextColor(ContextCompat.getColor(this,R.color.colorOrange))
+            player2ScoreTV.setTextColor(ContextCompat.getColor(this,R.color.colorOrange))
+        }
+
+        val newGameButton = findViewById<Button>(R.id.startButton)
+
+        newGameButton.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+        }
+
+        val mainMenuButton = findViewById<Button>(R.id.mainMenuButton)
+
+        mainMenuButton.setOnClickListener {
+            val intent = Intent(this, MainMenuActivity::class.java)
+            startActivity(intent)
+        }
+
 
 
         /**UI ELEMENTS END**/

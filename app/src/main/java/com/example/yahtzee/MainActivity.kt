@@ -35,7 +35,7 @@ class MainActivity : AppCompatActivity() {
         val upperScoreBonusTextView = findViewById<TextView>(R.id.upperScoreBonusTextView)
 
         //initializing the roll button and play button
-        val rollButton = findViewById<Button>(R.id.rollButton)
+        val rollButton = findViewById<Button>(R.id.startButton)
         val playButton = findViewById<Button>(R.id.playButton)
         val nextTurnButton = findViewById<Button>(R.id.nextTurnButton)
         //val endGameButton  =findViewById<Button>(R.id.endGameButton)
@@ -59,7 +59,7 @@ class MainActivity : AppCompatActivity() {
         val numPlayers = 2
         val playerList = mutableListOf<Player>()
         var thisPlayersTurn = 0
-        val maxNumberOfRounds =  13//for testing purposes
+        val maxNumberOfRounds =  1
 
         for (n in 0 until numPlayers) {
             playerList.add(Player("Player ${n + 1}", createScoreSheet(), 0, 0, false))
