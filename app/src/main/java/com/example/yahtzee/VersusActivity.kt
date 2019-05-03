@@ -12,22 +12,19 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.view.View
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
-import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_versus.*
 
-data class Player(val name: String, val playerScoreSheet: List<ScoreBox>,
-                  var upperTotalScore: Int, var totalScore: Int, var upperScoreBonus: Boolean = false,
-                  var upperScoreBonusActivated: Boolean = false)
-data class Dice(val button: Button, var isSelected: Boolean = false, var value: Int = 0)
-data class ScoreBox(val button: Button, var value: Int = 0, var isSelected: Boolean = false, var isSaved: Boolean = false, var isCalculated: Boolean = false)
-
-class MainActivity : AppCompatActivity() {
+class VersusActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_versus)
 
         val player1ScoreTextView = findViewById<TextView>(R.id.player1ScoreTextView)
         val player2ScoreTextView = findViewById<TextView>(R.id.player2ScoreTextView)
@@ -35,17 +32,17 @@ class MainActivity : AppCompatActivity() {
         val upperScoreBonusTextView = findViewById<TextView>(R.id.upperScoreBonusTextView)
 
         //initializing the roll button and play button
-        val rollButton = findViewById<Button>(R.id.startButton)
+        val rollButton = findViewById<Button>(R.id.versusButton)
         val playButton = findViewById<Button>(R.id.playButton)
         val nextTurnButton = findViewById<Button>(R.id.nextTurnButton)
-        //val endGameButton  =findViewById<Button>(R.id.endGameButton)
+
 
         //initializing dice buttons
-        val dice1Button = findViewById<Button>(R.id.dice1Button)
-        val dice2Button = findViewById<Button>(R.id.dice2Button)
-        val dice3Button = findViewById<Button>(R.id.dice3Button)
-        val dice4Button = findViewById<Button>(R.id.dice4Button)
-        val dice5Button = findViewById<Button>(R.id.dice5Button)
+        val dice1Button = findViewById<ImageButton>(R.id.dice1Button)
+        val dice2Button = findViewById<ImageButton>(R.id.dice2Button)
+        val dice3Button = findViewById<ImageButton>(R.id.dice3Button)
+        val dice4Button = findViewById<ImageButton>(R.id.dice4Button)
+        val dice5Button = findViewById<ImageButton>(R.id.dice5Button)
 
         //initializing the Dice items
         val dice1 = Dice(dice1Button)
@@ -59,11 +56,12 @@ class MainActivity : AppCompatActivity() {
         val numPlayers = 2
         val playerList = mutableListOf<Player>()
         var thisPlayersTurn = 0
-        val maxNumberOfRounds =  1
+        val maxNumberOfRounds =  13
 
         for (n in 0 until numPlayers) {
             playerList.add(Player("Player ${n + 1}", createScoreSheet(), 0, 0, false))
         }
+
 
         var turnCount = 1
         var roundCount = 1
@@ -89,7 +87,7 @@ class MainActivity : AppCompatActivity() {
                                 turnCount,
                                 numPlayers,
                                 thisPlayersTurn,
-                                this@MainActivity
+                                this@VersusActivity
                             )
                             if (turnCount == 3) {
                                 rollButton.text = "No more rolls!"
@@ -165,26 +163,22 @@ class MainActivity : AppCompatActivity() {
                     //goes to next players turn
                     (thisPlayersTurn + 1) < numPlayers -> {
                         thisPlayersTurn++
-                        turnCount = 1
-                        nextTurn(playerList, thisPlayersTurn, diceList)
                         setPlayerNameColor(thisPlayersTurn, player1ScoreTextView, player2ScoreTextView)
-
                     }
                     //goes to the first players turn
                     (thisPlayersTurn + 1) == numPlayers -> {
                         thisPlayersTurn = 0
-                        turnCount = 1
-                        nextTurn(playerList, thisPlayersTurn, diceList)
                         roundCount++
                         setPlayerNameColor(thisPlayersTurn, player1ScoreTextView, player2ScoreTextView)
                         Toast.makeText(this, "Round Count: $roundCount", Toast.LENGTH_SHORT).show()
                     }
                 }
 
+                turnCount = 1
+                nextTurn(playerList, thisPlayersTurn, diceList)
+
                 //Displays end game button
                 if(roundCount == maxNumberOfRounds) {
-                    /*endGameButton.visibility = (View.VISIBLE)
-                    endGameButton.isClickable = true*/
                     endGameMessage(playerList)
 
                 }
@@ -211,16 +205,35 @@ class MainActivity : AppCompatActivity() {
             }
 
 
-        /*
-        endGameButton.setOnClickListener{
-            endGameMessage(playerList)
+    }
 
-        }*/
+    private fun diceRollAnimation(dice: Dice){
+        val anim = AnimationUtils.loadAnimation(this, R.anim.shake)
+        val value = dice.value
+
+
+        val animationListener: Animation.AnimationListener = object : Animation.AnimationListener{
+
+            override fun onAnimationStart(animation: Animation) {}
+
+            override fun onAnimationEnd(animation: Animation) {
+                val res = resources.getIdentifier("dice_$value", "drawable", "com.example.yahtzee")
+
+                dice.button.setBackgroundResource(res)
+
+            }
+
+            override fun onAnimationRepeat(animation: Animation?) {}
+        }
+
+        anim.setAnimationListener(animationListener)
+        dice.button.startAnimation(anim)
+
     }
 
     private fun endGameMessage(playerList: MutableList<Player>){
 
-        val intent = Intent(this,EndGameActivity::class.java)
+        val intent = Intent(this,VersusEndGameActivity::class.java)
         intent.putExtra("player1Score",playerList[0].totalScore)
         intent.putExtra("player2Score", playerList[1].totalScore)
         startActivity(intent)
@@ -251,32 +264,43 @@ class MainActivity : AppCompatActivity() {
             diceList.forEach { n->
                 n.isSelected = false
                 n.value = 0
-                n.button.setBackgroundResource(R.drawable.button_background_white)
             }
         }
+
+
         for(n in 0..4) {
             //create a random number
             val rng = (1..6).random()
             //set the button text to the random number
             if(!diceList[n].isSelected) {
-                diceList[n].button.text = rng.toString()
+                //diceList[n].button.text = rng.toString()
                 diceList[n].value = rng
             }
         }
+
+
+        for(dice in diceList){
+            if(!dice.isSelected) {
+                diceRollAnimation(dice)
+            }
+        }
+
+
         //set click listeners for all of the dice buttons in an efficient loop
         diceList.forEach { n-> n.button.setOnClickListener{
             if(!n.isSelected) {
                 n.isSelected=true
-                n.button.setBackgroundResource(R.drawable.button_background_orange)
-                n.button.setTextColor(ContextCompat.getColor(context,R.color.colorBlack))
+                val res = resources.getIdentifier("dice_selected_${n.value}", "drawable", "com.example.yahtzee")
+                n.button.setBackgroundResource(res)
+
             }
             else{
                 n.isSelected=false
-                n.button.setBackgroundResource(R.drawable.button_background_white)
-                n.button.setTextColor(ContextCompat.getColor(context,R.color.colorBlack))
+                val res = resources.getIdentifier("dice_${n.value}", "drawable", "com.example.yahtzee")
+                n.button.setBackgroundResource(res)
 
-            }
-        }}
+            }}}
+
 
         //set click listeners for all of the score buttons in an efficient loop
         playersScoreSheet[thisPlayersTurn].playerScoreSheet.forEach { n -> n.button.setOnClickListener{
@@ -317,17 +341,14 @@ class MainActivity : AppCompatActivity() {
 
             }
         }}
-        calcScore(diceList,playersScoreSheet[thisPlayersTurn].playerScoreSheet, playersScoreSheet[thisPlayersTurn].upperTotalScore,
-            playersScoreSheet[thisPlayersTurn].upperScoreBonus, playersScoreSheet[thisPlayersTurn].totalScore,
-            playersScoreSheet[thisPlayersTurn].upperScoreBonusActivated)
+        calcScore(diceList,playersScoreSheet[thisPlayersTurn].playerScoreSheet)
 
         //calculates and returns total score
         playersScoreSheet[thisPlayersTurn].totalScore = calcPlayerTotalScore(playersScoreSheet, thisPlayersTurn)
     }
 
     @TargetApi(24)
-    private fun calcScore(diceList: List<Dice>, playerScoreSheet: List<ScoreBox>, playerUpperScore: Int,
-                          playerUpperScoreBonus: Boolean, playerTotalScore: Int, playerUpperScoreBonusActivated: Boolean){
+    private fun calcScore(diceList: List<Dice>, playerScoreSheet: List<ScoreBox>){
         val frequenciesOfNumbers = diceList.groupingBy { it.value }.eachCount()
         var sumOfAllDice = 0
 
@@ -524,8 +545,6 @@ class MainActivity : AppCompatActivity() {
 
         diceList.forEach { n->
             n.button.isClickable = false
-            n.button.text = "0"
-            n.button.setBackgroundResource(R.drawable.button_background_white)
         }
 
         playerList[thisPlayersTurn].playerScoreSheet.forEach { n->

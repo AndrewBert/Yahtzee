@@ -9,8 +9,12 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
+        <activity android:name=".SoloEndGameActivity">
+        </activity>
+        <activity android:name=".SoloActivity">
+        </activity>
         <activity
-                android:name=".EndGameActivity"
+                android:name=".VersusEndGameActivity"
                 android:label="@string/title_activity_end_game"
                 android:theme="@style/AppTheme.NoActionBar">
         </activity>
@@ -21,7 +25,7 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity">
+        <activity android:name=".VersusActivity">
         </activity>
     </application>
 

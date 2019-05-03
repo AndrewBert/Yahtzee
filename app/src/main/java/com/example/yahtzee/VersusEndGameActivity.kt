@@ -7,15 +7,12 @@ import android.support.v4.content.ContextCompat
 import android.widget.Button
 import android.widget.TextView
 
-class EndGameActivity : AppCompatActivity() {
+class VersusEndGameActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_end_game)
+        setContentView(R.layout.activity_versus_end_game)
 
-
-        //val player1Score: String = player1ScoreTextView?.text.toString()
-        //val player2Score: String = player2ScoreTextView?.text.toString()
 
         val player1Score = intent.getIntExtra("player1Score", 999)
         val player2Score = intent.getIntExtra("player2Score", 999)
@@ -57,10 +54,10 @@ class EndGameActivity : AppCompatActivity() {
             player2ScoreTV.setTextColor(ContextCompat.getColor(this,R.color.colorOrange))
         }
 
-        val newGameButton = findViewById<Button>(R.id.startButton)
+        val newGameButton = findViewById<Button>(R.id.versusButton)
 
         newGameButton.setOnClickListener {
-            val intent = Intent(this, MainActivity::class.java)
+            val intent = Intent(this, VersusActivity::class.java)
             startActivity(intent)
         }
 

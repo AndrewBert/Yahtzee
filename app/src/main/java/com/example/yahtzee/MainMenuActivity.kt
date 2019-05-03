@@ -11,11 +11,19 @@ class MainMenuActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main_menu)
 
-        val soloMenuButton = findViewById<Button>(R.id.startButton)
+        val soloButton = findViewById<Button>(R.id.soloButton)
 
-        soloMenuButton.setOnClickListener {
-            val intent = Intent(this,MainActivity::class.java)
+        soloButton.setOnClickListener {
+            val intent = Intent(this,SoloActivity::class.java)
             startActivity(intent)
         }
+
+        val versusButton = findViewById<Button>(R.id.versusButton)
+
+        versusButton.setOnClickListener {
+            val intent = Intent(this,VersusActivity::class.java)
+            startActivity(intent)
+        }
+
     }
 }

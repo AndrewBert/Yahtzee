@@ -5,7 +5,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".MainActivity">
+        tools:context=".VersusActivity">
 
 
     <Button
@@ -15,9 +15,10 @@
             android:id="@+id/nextTurnButton"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginEnd="16dp" android:layout_marginRight="16dp"
-            app:layout_constraintTop_toTopOf="@+id/startButton"
-            app:layout_constraintBottom_toBottomOf="@+id/startButton" android:visibility="invisible"
-            android:clickable="false" android:background="@drawable/button_background_orange_darker" android:textColor="#FFFFFF"/>
+            app:layout_constraintTop_toTopOf="@+id/versusButton"
+            app:layout_constraintBottom_toBottomOf="@+id/versusButton" android:visibility="invisible"
+            android:clickable="false" android:background="@drawable/button_background_orange_darker"
+            android:textColor="#FFFFFF"/>
     <Button
             android:layout_width="50dp"
             android:layout_height="50dp"
@@ -25,21 +26,24 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginEnd="50dp" android:layout_marginRight="50dp"
             app:layout_constraintBottom_toBottomOf="@+id/sixesButton" android:layout_marginTop="8dp"
-            app:layout_constraintTop_toTopOf="@+id/sixesButton" android:background="@drawable/button_background_white" android:textColor="#FF8921"/>
+            app:layout_constraintTop_toTopOf="@+id/sixesButton" android:background="@drawable/button_background_white"
+            android:textColor="#FF8921"/>
     <Button
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:id="@+id/chanceButton"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginEnd="50dp" android:layout_marginRight="50dp"
-            android:layout_marginTop="16dp" app:layout_constraintTop_toBottomOf="@+id/sixesButton" android:background="@drawable/button_background_white" android:textColor="#FF8921"/>
+            android:layout_marginTop="16dp" app:layout_constraintTop_toBottomOf="@+id/sixesButton"
+            android:background="@drawable/button_background_white" android:textColor="#FF8921"/>
     <Button
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:id="@+id/threeOfAKindButton"
             app:layout_constraintTop_toTopOf="@+id/onesButton"
             app:layout_constraintBottom_toBottomOf="@+id/onesButton" app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginEnd="50dp" android:layout_marginRight="50dp" android:background="@drawable/button_background_white" android:textColor="#FF8921"/>
+            android:layout_marginEnd="50dp" android:layout_marginRight="50dp"
+            android:background="@drawable/button_background_white" android:textColor="#FF8921"/>
     <Button
             android:layout_width="50dp"
             android:layout_height="50dp"
@@ -47,21 +51,24 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginEnd="50dp" android:layout_marginRight="50dp"
             app:layout_constraintTop_toTopOf="@+id/fivesButton"
-            app:layout_constraintBottom_toBottomOf="@+id/fivesButton" android:background="@drawable/button_background_white" android:textColor="#FF8921"/>
+            app:layout_constraintBottom_toBottomOf="@+id/fivesButton"
+            android:background="@drawable/button_background_white" android:textColor="#FF8921"/>
     <Button
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:id="@+id/fourOfAKindButton"
             app:layout_constraintTop_toTopOf="@+id/twosButton" app:layout_constraintBottom_toBottomOf="@+id/twosButton"
             app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="50dp"
-            android:layout_marginRight="50dp" android:background="@drawable/button_background_white" android:textColor="#FF8921"/>
+            android:layout_marginRight="50dp" android:background="@drawable/button_background_white"
+            android:textColor="#FF8921"/>
     <Button
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:id="@+id/fullHouseButton"
             app:layout_constraintTop_toTopOf="@+id/threesButton" app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginEnd="50dp" android:layout_marginRight="50dp"
-            app:layout_constraintBottom_toBottomOf="@+id/threesButton" android:background="@drawable/button_background_white" android:textColor="#FF8921"/>
+            app:layout_constraintBottom_toBottomOf="@+id/threesButton"
+            android:background="@drawable/button_background_white" android:textColor="#FF8921"/>
     <Button
             android:layout_width="50dp"
             android:layout_height="50dp"
@@ -69,17 +76,18 @@
             android:layout_marginEnd="50dp"
             app:layout_constraintEnd_toEndOf="parent" android:layout_marginRight="50dp"
             app:layout_constraintTop_toTopOf="@+id/foursButton"
-            app:layout_constraintBottom_toBottomOf="@+id/foursButton" android:background="@drawable/button_background_white" android:textColor="#FF8921"/>
-    <Button
+            app:layout_constraintBottom_toBottomOf="@+id/foursButton"
+            android:background="@drawable/button_background_white" android:textColor="#FF8921"/>
+    <ImageButton
             android:text="@string/dice_3"
             android:layout_width="64dp"
             android:layout_height="64dp"
             app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="172dp"
             android:layout_marginStart="172dp" android:id="@+id/dice3Button" android:layout_marginBottom="32dp"
-            app:layout_constraintBottom_toTopOf="@+id/startButton"
+            app:layout_constraintBottom_toTopOf="@+id/versusButton"
             app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="172dp"
-            android:layout_marginRight="172dp" android:background="@drawable/button_background_white"/>
-    <Button
+            android:layout_marginRight="172dp" android:background="@drawable/dice_3"/>
+    <ImageButton
             android:text="@string/dice_2"
             android:layout_width="64dp"
             android:layout_height="64dp"
@@ -87,32 +95,35 @@
             app:layout_constraintEnd_toStartOf="@+id/dice3Button" android:layout_marginEnd="16dp"
             android:layout_marginRight="16dp" app:layout_constraintStart_toEndOf="@+id/dice1Button"
             android:layout_marginLeft="16dp" android:layout_marginStart="16dp" android:layout_marginBottom="32dp"
-            app:layout_constraintBottom_toTopOf="@+id/startButton" android:background="@drawable/button_background_white"/>
+            app:layout_constraintBottom_toTopOf="@+id/versusButton"
+            android:background="@drawable/dice_2"/>
     <Button
             android:text="@string/roll_1"
             android:layout_width="0dp"
             android:layout_height="67dp" app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginBottom="16dp" android:id="@+id/startButton" android:layout_marginEnd="150dp"
+            android:layout_marginBottom="16dp" android:id="@+id/versusButton" android:layout_marginEnd="150dp"
             android:layout_marginRight="150dp" android:layout_marginLeft="8dp" android:layout_marginStart="8dp"
-            tools:text="ROLL" android:background="@drawable/button_background_orange" android:textColor="#FFFFFF" />
-    <Button
+            tools:text="ROLL" android:background="@drawable/button_background_orange" android:textColor="#FFFFFF"/>
+    <ImageButton
             android:text="@string/dice_1"
             android:layout_width="64dp"
             android:layout_height="64dp"
             android:id="@+id/dice1Button"
             app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="16dp"
             android:layout_marginStart="16dp" android:layout_marginBottom="32dp"
-            app:layout_constraintBottom_toTopOf="@+id/startButton" android:background="@drawable/button_background_white"/>
-    <Button
+            app:layout_constraintBottom_toTopOf="@+id/versusButton"
+            android:background="@drawable/dice_1"/>
+    <ImageButton
             android:text="@string/dice_5"
             android:layout_width="64dp"
             android:layout_height="64dp"
             android:id="@+id/dice5Button"
             android:layout_marginBottom="32dp"
-            app:layout_constraintBottom_toTopOf="@+id/startButton" app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginEnd="16dp" android:layout_marginRight="16dp" android:background="@drawable/button_background_white" />
-    <Button
+            app:layout_constraintBottom_toTopOf="@+id/versusButton" app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="16dp" android:layout_marginRight="16dp"
+            android:background="@drawable/dice_5"/>
+    <ImageButton
             android:text="@string/dice_4"
             android:layout_width="64dp"
             android:layout_height="64dp"
@@ -120,51 +131,59 @@
             android:layout_marginStart="16dp" android:id="@+id/dice4Button"
             app:layout_constraintStart_toEndOf="@+id/dice3Button"
             android:layout_marginBottom="32dp"
-            app:layout_constraintBottom_toTopOf="@+id/startButton" app:layout_constraintEnd_toStartOf="@+id/dice5Button"
-            android:layout_marginEnd="16dp" android:layout_marginRight="16dp" android:background="@drawable/button_background_white"/>
+            app:layout_constraintBottom_toTopOf="@+id/versusButton"
+            app:layout_constraintEnd_toStartOf="@+id/dice5Button"
+            android:layout_marginEnd="16dp" android:layout_marginRight="16dp"
+            android:background="@drawable/dice_4"/>
     <Button
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:id="@+id/onesButton"
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginLeft="50dp" android:layout_marginStart="50dp"
-            android:layout_marginTop="24dp" app:layout_constraintTop_toTopOf="parent" android:background="@drawable/button_background_white" android:textColor="#FF8921"
-            />
+            android:layout_marginTop="45dp" app:layout_constraintTop_toTopOf="parent"
+            android:background="@drawable/button_background_white" android:textColor="#FF8921"
+    />
     <Button
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:id="@+id/twosButton"
             app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="50dp"
             android:layout_marginStart="50dp" android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/onesButton" android:background="@drawable/button_background_white" android:textColor="#FF8921"/>
+            app:layout_constraintTop_toBottomOf="@+id/onesButton" android:background="@drawable/button_background_white"
+            android:textColor="#FF8921"/>
     <Button
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:id="@+id/threesButton"
             app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="50dp"
             android:layout_marginStart="50dp" android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/twosButton" android:background="@drawable/button_background_white" android:textColor="#FF8921"/>
+            app:layout_constraintTop_toBottomOf="@+id/twosButton" android:background="@drawable/button_background_white"
+            android:textColor="#FF8921"/>
     <Button
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:id="@+id/foursButton"
             app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="50dp"
             android:layout_marginStart="50dp"
-            android:layout_marginTop="8dp" app:layout_constraintTop_toBottomOf="@+id/threesButton" android:background="@drawable/button_background_white" android:textColor="#FF8921"/>
+            android:layout_marginTop="8dp" app:layout_constraintTop_toBottomOf="@+id/threesButton"
+            android:background="@drawable/button_background_white" android:textColor="#FF8921"/>
     <Button
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:id="@+id/fivesButton"
             app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="50dp"
             android:layout_marginStart="50dp"
-            android:layout_marginTop="8dp" app:layout_constraintTop_toBottomOf="@+id/foursButton" android:background="@drawable/button_background_white" android:textColor="#FF8921"/>
+            android:layout_marginTop="8dp" app:layout_constraintTop_toBottomOf="@+id/foursButton"
+            android:background="@drawable/button_background_white" android:textColor="#FF8921"/>
     <Button
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:id="@+id/sixesButton"
             app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="50dp"
             android:layout_marginStart="50dp"
-            android:layout_marginTop="8dp" app:layout_constraintTop_toBottomOf="@+id/fivesButton" android:background="@drawable/button_background_white" android:textColor="#FF8921"/>
+            android:layout_marginTop="8dp" app:layout_constraintTop_toBottomOf="@+id/fivesButton"
+            android:background="@drawable/button_background_white" android:textColor="#FF8921"/>
     <TextView
             android:text="1'S"
             android:layout_width="30dp"
@@ -302,49 +321,32 @@
             android:layout_width="128dp"
             android:layout_height="67dp"
             android:id="@+id/playButton"
-            app:layout_constraintTop_toTopOf="@+id/startButton"
-            app:layout_constraintBottom_toBottomOf="@+id/startButton" app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginEnd="16dp" android:layout_marginRight="16dp" android:background="@drawable/button_background_white" android:textColor="#FF8921"/>
+            app:layout_constraintTop_toTopOf="@+id/versusButton"
+            app:layout_constraintBottom_toBottomOf="@+id/versusButton" app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="16dp" android:layout_marginRight="16dp"
+            android:background="@drawable/button_background_white" android:textColor="#FF8921"/>
     <TextView
             android:text="0"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/player1ScoreTextView"
-            android:textSize="24sp"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            app:layout_constraintStart_toEndOf="@+id/player1ScoreTextView2"
-            app:layout_constraintTop_toTopOf="@+id/player1ScoreTextView2"
-            app:layout_constraintBottom_toBottomOf="@+id/player1ScoreTextView2" android:textStyle="bold"/>
+            android:textSize="50sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@+id/player1ScoreTextView2"
+            app:layout_constraintStart_toStartOf="@+id/player1ScoreTextView2"
+            app:layout_constraintTop_toBottomOf="@+id/player1ScoreTextView2"
+            android:layout_marginLeft="8dp" android:layout_marginStart="8dp" android:layout_marginRight="8dp"
+            android:layout_marginEnd="8dp" android:textColor="#FF8921"/>
     <TextView
-            android:text="Player 1:"
+            android:text="SCORE"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/player1ScoreTextView2"
-            android:layout_marginTop="128dp"
+            android:layout_marginTop="48dp"
             app:layout_constraintTop_toBottomOf="@+id/sixesButton"
-            android:textSize="18sp"
-            android:layout_marginStart="8dp" app:layout_constraintStart_toStartOf="@+id/dice1Button"
-            android:layout_marginLeft="8dp"/>
-    <TextView
-            android:text="0"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/player2ScoreTextView"
-            android:textSize="24sp"
-            app:layout_constraintStart_toEndOf="@+id/player2ScoreTextView2" android:layout_marginLeft="8dp"
-            android:layout_marginStart="8dp"
-            app:layout_constraintTop_toTopOf="@+id/player2ScoreTextView2"
-            app:layout_constraintBottom_toBottomOf="@+id/player2ScoreTextView2" android:textStyle="bold"/>
-    <TextView
-            android:text="Player 2:"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/player2ScoreTextView2"
-            app:layout_constraintTop_toBottomOf="@+id/player1ScoreTextView"
-            android:layout_marginBottom="16dp" app:layout_constraintBottom_toTopOf="@+id/dice1Button"
-            app:layout_constraintVertical_bias="0.535" android:textSize="18sp"
-            app:layout_constraintStart_toStartOf="@+id/player1ScoreTextView2"/>
+            android:textSize="30sp"
+            android:layout_marginStart="12dp" app:layout_constraintStart_toStartOf="@+id/dice1Button"
+            android:layout_marginLeft="12dp"/>
     <TextView
             android:text="BONUS +35"
             android:layout_width="wrap_content"
