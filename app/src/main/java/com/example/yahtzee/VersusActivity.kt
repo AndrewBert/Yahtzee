@@ -11,6 +11,7 @@ import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
+import android.support.v7.app.AlertDialog
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
@@ -29,7 +30,6 @@ class VersusActivity : AppCompatActivity() {
         val player1ScoreTextView = findViewById<TextView>(R.id.player1ScoreTextView)
         val player2ScoreTextView = findViewById<TextView>(R.id.player2ScoreTextView)
 
-        val upperScoreBonusTextView = findViewById<TextView>(R.id.upperScoreBonusTextView)
 
         //initializing the roll button and play button
         val rollButton = findViewById<Button>(R.id.versusButton)
@@ -143,6 +143,7 @@ class VersusActivity : AppCompatActivity() {
                     //upperScoreTotalTextView.text = "Upper Score: ${playerList[thisPlayersTurn].upperTotalScore}"
 
                     activateUpperBonus(playerList, thisPlayersTurn)
+                    updateSectionBonusScore(playerList, thisPlayersTurn)
 
                     playButton.visibility = (View.INVISIBLE)
                     playButton.isClickable = false
@@ -176,6 +177,7 @@ class VersusActivity : AppCompatActivity() {
 
                 turnCount = 1
                 nextTurn(playerList, thisPlayersTurn, diceList)
+                updateSectionBonusScore(playerList, thisPlayersTurn)
 
                 //Displays end game button
                 if(roundCount == maxNumberOfRounds) {
@@ -188,12 +190,6 @@ class VersusActivity : AppCompatActivity() {
                 player1ScoreTextView.text = "${playerList[0].totalScore}"
                 player2ScoreTextView.text = "${playerList[1].totalScore}"
 
-                if(playerList[thisPlayersTurn].upperScoreBonusActivated){
-                    upperScoreBonusTextView.visibility = View.VISIBLE
-                }
-                else {
-                    upperScoreBonusTextView.visibility = View.INVISIBLE
-                }
 
                 nextTurnButton.visibility = (View.INVISIBLE)
                 nextTurnButton.isClickable = false
@@ -202,9 +198,31 @@ class VersusActivity : AppCompatActivity() {
                 playButton.visibility = (View.VISIBLE)
 
                 rollButton.isClickable = true
+
             }
 
+        backToHomeButtonVersus.setOnClickListener {
+            onBackPressed()
+        }
 
+
+    }
+
+    override fun onBackPressed(){
+        val builder = AlertDialog.Builder(this)
+        builder.setMessage("Do you want to quit?")
+            .setCancelable(true)
+            .setNegativeButton("No") { dialog, which ->
+                dialog.cancel()
+
+            }
+
+            .setPositiveButton("Yes"){dialog, which ->
+                finish()
+            }
+
+        val alertDialog = builder.create()
+        alertDialog.show()
     }
 
     private fun diceRollAnimation(dice: Dice){
@@ -240,12 +258,21 @@ class VersusActivity : AppCompatActivity() {
 
     }
 
+    private fun updateSectionBonusScore(playersScoreSheet: MutableList<Player>, thisPlayersTurn: Int){
+        val upperTotalScore = playersScoreSheet[thisPlayersTurn].upperTotalScore
+        sectionBonusTextViewVersus.text = "BONUS : $upperTotalScore/63"
+
+        if(upperTotalScore>=63){
+            sectionBonusTextViewVersus.text = "BONUS +35!"
+        }
+    }
+
+
     private fun activateUpperBonus(playersScoreSheet: MutableList<Player>, thisPlayersTurn: Int)
     {
         if(playersScoreSheet[thisPlayersTurn].upperTotalScore >= 63){
             playersScoreSheet[thisPlayersTurn].upperScoreBonus = true
             if(playersScoreSheet[thisPlayersTurn].upperScoreBonus&&!playersScoreSheet[thisPlayersTurn].upperScoreBonusActivated){
-                upperScoreBonusTextView.visibility = View.VISIBLE
                 playersScoreSheet[thisPlayersTurn].totalScore += 35
             }
             if(playersScoreSheet[thisPlayersTurn].upperScoreBonus){
@@ -253,6 +280,7 @@ class VersusActivity : AppCompatActivity() {
                 playersScoreSheet[thisPlayersTurn].upperScoreBonusActivated = true
             }
         }
+
     }
 
     //activates dice buttons
@@ -470,8 +498,7 @@ class VersusActivity : AppCompatActivity() {
             playerScoreSheet[n].button.text = playerScoreSheet[n].value.toString()
         }
 
-        //ended here
-        upperScoreBonusTextView.setText("BONUS +35")
+
     }
 
     private fun calcPlayerTotalScore(playersScoreSheet: MutableList<Player>, thisPlayersTurn: Int): Int{
@@ -577,9 +604,6 @@ class VersusActivity : AppCompatActivity() {
     }
 //todo change random algorithm because its pseudo-random??
     /**
-     * add end game screen
-     * add home menu
-     * add data persistence for highest scores
      * add option to play against a bot
      *
      */

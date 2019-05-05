@@ -1,6 +1,8 @@
 package com.example.yahtzee
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
@@ -14,15 +16,13 @@ class SoloEndGameActivity : AppCompatActivity() {
         setContentView(R.layout.activity_solo_end_game)
 
 
-        val player1Score = intent.getIntExtra("player1Score", 999)
+        val score = intent.getIntExtra("player1Score", 999)
 
 
-        var winningPlayerNumber = 0
 
-        /**UI ELEMENTS**/
         val player1ScoreTV = findViewById<TextView>(R.id.player1FinalScoreTV)
 
-        player1ScoreTV.text = player1Score.toString()
+        player1ScoreTV.text = score.toString()
 
         val newGameButton = findViewById<Button>(R.id.versusButton)
 
@@ -39,8 +39,22 @@ class SoloEndGameActivity : AppCompatActivity() {
         }
 
 
+        val highScoreTextView = findViewById<TextView>(R.id.highScoreTextView)
+        val settings = getSharedPreferences("GAME_DATA", Context.MODE_PRIVATE)
+        val highScore = settings.getInt("HIGH_SCORE", 0)
 
-        /**UI ELEMENTS END**/
+        if(score > highScore){
+            highScoreTextView.setText("NEW HIGH SCORE : $score")
+            highScoreTextView.setTextColor(ContextCompat.getColor(this,R.color.colorOrange))
+
+
+            //save
+            val editor = settings.edit()
+            editor.putInt("HIGH_SCORE", score)
+            editor.commit()
+        }else{
+            highScoreTextView.setText("High Score : $highScore")
+        }
 
 
 

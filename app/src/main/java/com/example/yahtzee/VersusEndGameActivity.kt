@@ -18,7 +18,6 @@ class VersusEndGameActivity : AppCompatActivity() {
         val player2Score = intent.getIntExtra("player2Score", 999)
 
 
-        var winningPlayerNumber = 0
 
         /**UI ELEMENTS**/
         val player1ScoreTV = findViewById<TextView>(R.id.player1FinalScoreTV)
@@ -31,6 +30,8 @@ class VersusEndGameActivity : AppCompatActivity() {
 
         player1ScoreTV.text = player1Score.toString()
         player2ScoreTV.text = player2Score.toString()
+
+        var winningPlayerNumber: Int
 
         winningPlayerNumber = when{
             player1Score > player2Score -> 1
@@ -54,6 +55,7 @@ class VersusEndGameActivity : AppCompatActivity() {
             player2ScoreTV.setTextColor(ContextCompat.getColor(this,R.color.colorOrange))
         }
 
+
         val newGameButton = findViewById<Button>(R.id.versusButton)
 
         newGameButton.setOnClickListener {
@@ -67,6 +69,8 @@ class VersusEndGameActivity : AppCompatActivity() {
             val intent = Intent(this, MainMenuActivity::class.java)
             startActivity(intent)
         }
+
+
 
 
 
