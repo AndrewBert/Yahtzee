@@ -45,6 +45,7 @@ class SoloActivity : AppCompatActivity() {
         val dice4Button = findViewById<ImageButton>(R.id.dice4Button)
         val dice5Button = findViewById<ImageButton>(R.id.dice5Button)
 
+
         //initializing the Dice items
         val dice1 = Dice(dice1Button)
         val dice2 = Dice(dice2Button)
