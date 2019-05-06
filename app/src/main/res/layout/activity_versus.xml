@@ -27,7 +27,7 @@
             android:layout_marginEnd="16dp" android:layout_marginRight="16dp"
             app:layout_constraintTop_toTopOf="@+id/versusButton"
             app:layout_constraintBottom_toBottomOf="@+id/versusButton" android:visibility="invisible"
-            android:clickable="false" android:background="@drawable/button_background_orange_darker" android:textColor="#FFFFFF"/>
+            android:clickable="false" android:background="@drawable/button_background_orange_selected" android:textColor="#FFFFFF"/>
     <Button
             android:layout_width="50dp"
             android:layout_height="50dp"

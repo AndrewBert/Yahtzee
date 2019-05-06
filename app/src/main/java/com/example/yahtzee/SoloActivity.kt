@@ -58,7 +58,7 @@ class SoloActivity : AppCompatActivity() {
         val numPlayers = 1
         val playerList = mutableListOf<Player>()
         val thisPlayersTurn = 0
-        val maxNumberOfRounds = 13
+        val maxNumberOfRounds = 14
 
         for (n in 0 until numPlayers) {
             playerList.add(Player("Player ${n + 1}", createScoreSheet(), 0, 0, false))
@@ -338,7 +338,7 @@ class SoloActivity : AppCompatActivity() {
                 if(n.isSelected)
                 {
                     //n.button.setBackgroundColor(ContextCompat.getColor(context, R.color.colorSavedButton))
-                    n.button.setBackgroundResource(R.drawable.button_background_orange_darker)
+                    n.button.setBackgroundResource(R.drawable.button_background_orange_selected)
                     n.button.setTextColor(ContextCompat.getColor(context,R.color.colorWhite))
 
                 }
